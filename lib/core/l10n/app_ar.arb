@@ -1,0 +1,103 @@
+﻿{
+  "@@locale": "ar",
+  "@@last_modified": "2026-10-02",
+
+  "appName": "نوفا",
+  "@appName": { "description": "Application name" },
+
+  "retry": "إعادة المحاولة",
+  "@retry": { "description": "Retry button label" },
+
+  "loading": "جارٍ التحميل…",
+  "@loading": {},
+
+  "errorGeneric": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  "@errorGeneric": {},
+
+  "errorNetwork": "تعذّر الاتصال بالإنترنت. تحقق من اتصالك وحاول مجدداً.",
+  "@errorNetwork": {},
+
+  "errorTimeout": "انتهت مهلة الاتصال. يرجى المحاولة مجدداً.",
+  "@errorTimeout": {},
+
+  "errorServer": "حدث خطأ في الخادم: {message}",
+  "@errorServer": {
+    "placeholders": { "message": { "type": "String" } }
+  },
+
+  "errorUnauthorized": "انتهت الجلسة. يرجى تسجيل الدخول مجدداً.",
+  "@errorUnauthorized": {},
+
+  "errorValidation": "البيانات المدخلة غير صحيحة.",
+  "@errorValidation": {},
+
+  "emptyDefault": "لا توجد بيانات لعرضها.",
+  "@emptyDefault": {},
+
+  "loginTitle": "تسجيل الدخول",
+  "@loginTitle": {},
+
+  "registerTitle": "إنشاء حساب",
+  "@registerTitle": {},
+
+  "emailLabel": "البريد الإلكتروني",
+  "@emailLabel": {},
+
+  "passwordLabel": "كلمة المرور",
+  "@passwordLabel": {},
+
+  "nameLabel": "الاسم",
+  "@nameLabel": {},
+
+  "continueLabel": "متابعة",
+  "@continueLabel": {},
+
+  "homeTitle": "الرئيسية",
+  "@homeTitle": {},
+
+  "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مجدداً.",
+  "@sessionExpired": {},
+
+  "parentGateTitle": "تحقق من هوية ولي الأمر",
+  "@parentGateTitle": {},
+
+  "parentGateQuestion": "كم يساوي {a} + {b}؟",
+  "@parentGateQuestion": {
+    "placeholders": {
+      "a": { "type": "int" },
+      "b": { "type": "int" }
+    }
+  },
+
+  "parentGateHint": "أدخل الإجابة",
+  "@parentGateHint": {},
+
+  "confirm": "تأكيد",
+  "@confirm": {},
+
+  "cancel": "إلغاء",
+  "@cancel": {},
+
+  "settingsTitle": "الإعدادات",
+  "@settingsTitle": {},
+
+  "progressTitle": "التقدم",
+  "@progressTitle": {},
+
+  "childrenTitle": "الأطفال",
+  "@childrenTitle": {},
+
+  "activityTitle": "النشاط",
+  "@activityTitle": {},
+
+  "stars": "{count} نجوم",
+  "@stars": {
+    "placeholders": { "count": { "type": "int" } }
+  },
+
+  "onboardingWelcomeTitle": "مرحباً بك في نوفا",
+  "@onboardingWelcomeTitle": {},
+
+  "onboardingWelcomeBody": "تطبيق تعليمي تكيّفي مصمم لدعم أطفالك.",
+  "@onboardingWelcomeBody": {}
+}
