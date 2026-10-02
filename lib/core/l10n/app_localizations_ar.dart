@@ -104,4 +104,109 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get onboardingWelcomeBody => 'تطبيق تعليمي تكيّفي مصمم لدعم أطفالك.';
+
+  @override
+  String get onboardingSkip => 'تخطى';
+
+  @override
+  String get onboardingNext => 'التالي';
+
+  @override
+  String get onboardingStart => 'ابدأ الآن';
+
+  @override
+  String get onboardingSlide1Title => 'تعلُّم مُصمَّم لطفلك';
+
+  @override
+  String get onboardingSlide1Body =>
+      'تنشئ نوفا أنشطة تعليمية مخصصة تتكيّف مع أسلوب تعلم طفلك واهتماماته.';
+
+  @override
+  String get onboardingSlide2Title => 'رحلة آمنة وهادئة';
+
+  @override
+  String get onboardingSlide2Body =>
+      'بيئة تعليمية لطيفة بدون ضغط أو إشارات سلبية — فقط الدعم والتشجيع.';
+
+  @override
+  String get onboardingSlide3Title => 'تابع تقدّم طفلك';
+
+  @override
+  String get onboardingSlide3Body =>
+      'تقارير واضحة ومفيدة تُظهر لك نمو طفلك وتوصيات النشاط القادم.';
+
+  @override
+  String get splashTagline => 'التعلم بأسلوبك';
+
+  @override
+  String get loginEmailHint => 'أدخل بريدك الإلكتروني';
+
+  @override
+  String get loginPasswordHint => 'أدخل كلمة المرور';
+
+  @override
+  String get loginButton => 'تسجيل الدخول';
+
+  @override
+  String get loginNoAccount => 'ليس لديك حساب؟';
+
+  @override
+  String get loginCreateAccount => 'أنشئ حساباً';
+
+  @override
+  String get loginWrongCredentials =>
+      'البريد الإلكتروني أو كلمة المرور غير صحيحة.';
+
+  @override
+  String get registerNameHint => 'أدخل اسمك الكامل';
+
+  @override
+  String get registerButton => 'إنشاء الحساب';
+
+  @override
+  String get registerHaveAccount => 'لديك حساب بالفعل؟';
+
+  @override
+  String get registerSignIn => 'سجّل دخولك';
+
+  @override
+  String get registerEmailExists =>
+      'هذا البريد الإلكتروني مستخدم بالفعل. يرجى تسجيل الدخول.';
+
+  @override
+  String get registerTermsPrefix => 'بإنشاء حساب، أنت توافق على ';
+
+  @override
+  String get registerTermsLink => 'شروط الاستخدام';
+
+  @override
+  String get registerTermsAnd => ' و';
+
+  @override
+  String get registerPrivacyLink => 'سياسة الخصوصية';
+
+  @override
+  String get validationEmailRequired => 'البريد الإلكتروني مطلوب.';
+
+  @override
+  String get validationEmailInvalid => 'يرجى إدخال بريد إلكتروني صحيح.';
+
+  @override
+  String get validationPasswordRequired => 'كلمة المرور مطلوبة.';
+
+  @override
+  String get validationPasswordWeak =>
+      'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتشمل حرفاً ورقماً.';
+
+  @override
+  String get validationNameRequired => 'الاسم مطلوب.';
+
+  @override
+  String get validationNameLength => 'يجب أن يكون الاسم بين 2 و60 حرفاً.';
+
+  @override
+  String get showPassword => 'إظهار كلمة المرور';
+
+  @override
+  String get hidePassword => 'إخفاء كلمة المرور';
 }

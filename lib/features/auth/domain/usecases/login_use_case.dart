@@ -1,0 +1,17 @@
+import 'package:fpdart/fpdart.dart';
+
+import '../../../../core/error/failures.dart';
+import '../entities/user.dart';
+import '../repositories/auth_repository.dart';
+
+/// Authenticates an existing parent account.
+class LoginUseCase {
+  const LoginUseCase(this._repository);
+  final AuthRepository _repository;
+
+  Future<Either<Failure, User>> call({
+    required String email,
+    required String password,
+  }) =>
+      _repository.login(email: email, password: password);
+}

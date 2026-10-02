@@ -1,4 +1,4 @@
-﻿{
+{
   "@@locale": "ar",
   "@@last_modified": "2026-10-02",
 
@@ -99,5 +99,104 @@
   "@onboardingWelcomeTitle": {},
 
   "onboardingWelcomeBody": "تطبيق تعليمي تكيّفي مصمم لدعم أطفالك.",
-  "@onboardingWelcomeBody": {}
+  "@onboardingWelcomeBody": {},
+
+  "onboardingSkip": "تخطى",
+  "@onboardingSkip": {},
+
+  "onboardingNext": "التالي",
+  "@onboardingNext": {},
+
+  "onboardingStart": "ابدأ الآن",
+  "@onboardingStart": {},
+
+  "onboardingSlide1Title": "تعلُّم مُصمَّم لطفلك",
+  "@onboardingSlide1Title": {},
+
+  "onboardingSlide1Body": "تنشئ نوفا أنشطة تعليمية مخصصة تتكيّف مع أسلوب تعلم طفلك واهتماماته.",
+  "@onboardingSlide1Body": {},
+
+  "onboardingSlide2Title": "رحلة آمنة وهادئة",
+  "@onboardingSlide2Title": {},
+
+  "onboardingSlide2Body": "بيئة تعليمية لطيفة بدون ضغط أو إشارات سلبية — فقط الدعم والتشجيع.",
+  "@onboardingSlide2Body": {},
+
+  "onboardingSlide3Title": "تابع تقدّم طفلك",
+  "@onboardingSlide3Title": {},
+
+  "onboardingSlide3Body": "تقارير واضحة ومفيدة تُظهر لك نمو طفلك وتوصيات النشاط القادم.",
+  "@onboardingSlide3Body": {},
+
+  "splashTagline": "التعلم بأسلوبك",
+  "@splashTagline": {},
+
+  "loginEmailHint": "أدخل بريدك الإلكتروني",
+  "@loginEmailHint": {},
+
+  "loginPasswordHint": "أدخل كلمة المرور",
+  "@loginPasswordHint": {},
+
+  "loginButton": "تسجيل الدخول",
+  "@loginButton": {},
+
+  "loginNoAccount": "ليس لديك حساب؟",
+  "@loginNoAccount": {},
+
+  "loginCreateAccount": "أنشئ حساباً",
+  "@loginCreateAccount": {},
+
+  "loginWrongCredentials": "البريد الإلكتروني أو كلمة المرور غير صحيحة.",
+  "@loginWrongCredentials": {},
+
+  "registerNameHint": "أدخل اسمك الكامل",
+  "@registerNameHint": {},
+
+  "registerButton": "إنشاء الحساب",
+  "@registerButton": {},
+
+  "registerHaveAccount": "لديك حساب بالفعل؟",
+  "@registerHaveAccount": {},
+
+  "registerSignIn": "سجّل دخولك",
+  "@registerSignIn": {},
+
+  "registerEmailExists": "هذا البريد الإلكتروني مستخدم بالفعل. يرجى تسجيل الدخول.",
+  "@registerEmailExists": {},
+
+  "registerTermsPrefix": "بإنشاء حساب، أنت توافق على ",
+  "@registerTermsPrefix": {},
+
+  "registerTermsLink": "شروط الاستخدام",
+  "@registerTermsLink": {},
+
+  "registerTermsAnd": " و",
+  "@registerTermsAnd": {},
+
+  "registerPrivacyLink": "سياسة الخصوصية",
+  "@registerPrivacyLink": {},
+
+  "validationEmailRequired": "البريد الإلكتروني مطلوب.",
+  "@validationEmailRequired": {},
+
+  "validationEmailInvalid": "يرجى إدخال بريد إلكتروني صحيح.",
+  "@validationEmailInvalid": {},
+
+  "validationPasswordRequired": "كلمة المرور مطلوبة.",
+  "@validationPasswordRequired": {},
+
+  "validationPasswordWeak": "يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتشمل حرفاً ورقماً.",
+  "@validationPasswordWeak": {},
+
+  "validationNameRequired": "الاسم مطلوب.",
+  "@validationNameRequired": {},
+
+  "validationNameLength": "يجب أن يكون الاسم بين 2 و60 حرفاً.",
+  "@validationNameLength": {},
+
+  "showPassword": "إظهار كلمة المرور",
+  "@showPassword": {},
+
+  "hidePassword": "إخفاء كلمة المرور",
+  "@hidePassword": {}
 }

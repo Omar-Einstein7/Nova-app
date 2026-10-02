@@ -273,6 +273,204 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'تطبيق تعليمي تكيّفي مصمم لدعم أطفالك.'**
   String get onboardingWelcomeBody;
+
+  /// No description provided for @onboardingSkip.
+  ///
+  /// In ar, this message translates to:
+  /// **'تخطى'**
+  String get onboardingSkip;
+
+  /// No description provided for @onboardingNext.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي'**
+  String get onboardingNext;
+
+  /// No description provided for @onboardingStart.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ الآن'**
+  String get onboardingStart;
+
+  /// No description provided for @onboardingSlide1Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعلُّم مُصمَّم لطفلك'**
+  String get onboardingSlide1Title;
+
+  /// No description provided for @onboardingSlide1Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'تنشئ نوفا أنشطة تعليمية مخصصة تتكيّف مع أسلوب تعلم طفلك واهتماماته.'**
+  String get onboardingSlide1Body;
+
+  /// No description provided for @onboardingSlide2Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'رحلة آمنة وهادئة'**
+  String get onboardingSlide2Title;
+
+  /// No description provided for @onboardingSlide2Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيئة تعليمية لطيفة بدون ضغط أو إشارات سلبية — فقط الدعم والتشجيع.'**
+  String get onboardingSlide2Body;
+
+  /// No description provided for @onboardingSlide3Title.
+  ///
+  /// In ar, this message translates to:
+  /// **'تابع تقدّم طفلك'**
+  String get onboardingSlide3Title;
+
+  /// No description provided for @onboardingSlide3Body.
+  ///
+  /// In ar, this message translates to:
+  /// **'تقارير واضحة ومفيدة تُظهر لك نمو طفلك وتوصيات النشاط القادم.'**
+  String get onboardingSlide3Body;
+
+  /// No description provided for @splashTagline.
+  ///
+  /// In ar, this message translates to:
+  /// **'التعلم بأسلوبك'**
+  String get splashTagline;
+
+  /// No description provided for @loginEmailHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل بريدك الإلكتروني'**
+  String get loginEmailHint;
+
+  /// No description provided for @loginPasswordHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل كلمة المرور'**
+  String get loginPasswordHint;
+
+  /// No description provided for @loginButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'تسجيل الدخول'**
+  String get loginButton;
+
+  /// No description provided for @loginNoAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'ليس لديك حساب؟'**
+  String get loginNoAccount;
+
+  /// No description provided for @loginCreateAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'أنشئ حساباً'**
+  String get loginCreateAccount;
+
+  /// No description provided for @loginWrongCredentials.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني أو كلمة المرور غير صحيحة.'**
+  String get loginWrongCredentials;
+
+  /// No description provided for @registerNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'أدخل اسمك الكامل'**
+  String get registerNameHint;
+
+  /// No description provided for @registerButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إنشاء الحساب'**
+  String get registerButton;
+
+  /// No description provided for @registerHaveAccount.
+  ///
+  /// In ar, this message translates to:
+  /// **'لديك حساب بالفعل؟'**
+  String get registerHaveAccount;
+
+  /// No description provided for @registerSignIn.
+  ///
+  /// In ar, this message translates to:
+  /// **'سجّل دخولك'**
+  String get registerSignIn;
+
+  /// No description provided for @registerEmailExists.
+  ///
+  /// In ar, this message translates to:
+  /// **'هذا البريد الإلكتروني مستخدم بالفعل. يرجى تسجيل الدخول.'**
+  String get registerEmailExists;
+
+  /// No description provided for @registerTermsPrefix.
+  ///
+  /// In ar, this message translates to:
+  /// **'بإنشاء حساب، أنت توافق على '**
+  String get registerTermsPrefix;
+
+  /// No description provided for @registerTermsLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'شروط الاستخدام'**
+  String get registerTermsLink;
+
+  /// No description provided for @registerTermsAnd.
+  ///
+  /// In ar, this message translates to:
+  /// **' و'**
+  String get registerTermsAnd;
+
+  /// No description provided for @registerPrivacyLink.
+  ///
+  /// In ar, this message translates to:
+  /// **'سياسة الخصوصية'**
+  String get registerPrivacyLink;
+
+  /// No description provided for @validationEmailRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'البريد الإلكتروني مطلوب.'**
+  String get validationEmailRequired;
+
+  /// No description provided for @validationEmailInvalid.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى إدخال بريد إلكتروني صحيح.'**
+  String get validationEmailInvalid;
+
+  /// No description provided for @validationPasswordRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'كلمة المرور مطلوبة.'**
+  String get validationPasswordRequired;
+
+  /// No description provided for @validationPasswordWeak.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن تحتوي كلمة المرور على 8 أحرف على الأقل، وتشمل حرفاً ورقماً.'**
+  String get validationPasswordWeak;
+
+  /// No description provided for @validationNameRequired.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاسم مطلوب.'**
+  String get validationNameRequired;
+
+  /// No description provided for @validationNameLength.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن يكون الاسم بين 2 و60 حرفاً.'**
+  String get validationNameLength;
+
+  /// No description provided for @showPassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إظهار كلمة المرور'**
+  String get showPassword;
+
+  /// No description provided for @hidePassword.
+  ///
+  /// In ar, this message translates to:
+  /// **'إخفاء كلمة المرور'**
+  String get hidePassword;
 }
 
 class _AppLocalizationsDelegate
