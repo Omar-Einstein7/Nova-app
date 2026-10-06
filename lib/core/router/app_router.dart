@@ -15,6 +15,7 @@ import '../../features/home/presentation/pages/child_form_page.dart';
 import '../../features/progress/presentation/pages/progress_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/activity/presentation/pages/activity_page.dart';
+import '../../features/activity/presentation/pages/start_activity_page.dart';
 import '../storage/prefs.dart';
 import 'route_names.dart';
 
@@ -111,6 +112,7 @@ GoRouter buildRouter({
             name: RouteNames.childDashboard,
             builder: (_, state) => ChildDashboardPage(
               childId: state.pathParameters['childId']!,
+              initialChild: state.extra is Child ? state.extra as Child : null,
             ),
           ),
           GoRoute(
@@ -119,6 +121,17 @@ GoRouter buildRouter({
             builder: (_, state) => ActivityPage(
               extra: state.extra as Map<String, dynamic>? ?? {},
             ),
+          ),
+          GoRoute(
+            path: 'children/:childId/start-activity',
+            name: RouteNames.startActivity,
+            builder: (_, state) {
+              final extra = state.extra as Map<String, dynamic>? ?? {};
+              return StartActivityPage(
+                child: extra['child'] as dynamic,
+                preselectedSkillId: extra['skillId'] as String?,
+              );
+            },
           ),
           GoRoute(
             path: 'progress',

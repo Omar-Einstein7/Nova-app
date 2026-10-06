@@ -16,6 +16,7 @@ abstract final class RouteNames {
   static const String childDashboard = "childDashboard";
 
   // Activity
+  static const String startActivity = "startActivity";
   static const String activity = "activity";
   static const String activityResult = "activityResult";
 

@@ -735,6 +735,156 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'عرض سجل التقدم الكامل'**
   String get viewFullProgress;
+
+  /// No description provided for @activityGenerating.
+  ///
+  /// In ar, this message translates to:
+  /// **'بنجهز لك نشاط جميل...'**
+  String get activityGenerating;
+
+  /// No description provided for @activityGeneratingPatience.
+  ///
+  /// In ar, this message translates to:
+  /// **'لسّه شوية... شكراً لصبرك 😊'**
+  String get activityGeneratingPatience;
+
+  /// No description provided for @activityStartButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ اللعب 🚀'**
+  String get activityStartButton;
+
+  /// No description provided for @activityNextButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'التالي ➡️'**
+  String get activityNextButton;
+
+  /// No description provided for @activityRetryButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'حاول مرة أخرى 💪'**
+  String get activityRetryButton;
+
+  /// No description provided for @activityFinishButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'اعرض النتيجة 🎉'**
+  String get activityFinishButton;
+
+  /// No description provided for @activityPlayAgain.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشاط آخر 🎮'**
+  String get activityPlayAgain;
+
+  /// No description provided for @activityGoHome.
+  ///
+  /// In ar, this message translates to:
+  /// **'العودة للرئيسية'**
+  String get activityGoHome;
+
+  /// No description provided for @activityExitTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'خروج من النشاط'**
+  String get activityExitTitle;
+
+  /// No description provided for @activityExitConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'تحب تكمل ولا تخرج؟'**
+  String get activityExitConfirm;
+
+  /// No description provided for @activityExitContinue.
+  ///
+  /// In ar, this message translates to:
+  /// **'أكمل'**
+  String get activityExitContinue;
+
+  /// No description provided for @activityExitLeave.
+  ///
+  /// In ar, this message translates to:
+  /// **'اخرج'**
+  String get activityExitLeave;
+
+  /// No description provided for @activityResultExcellent.
+  ///
+  /// In ar, this message translates to:
+  /// **'ممتاز! 🏆'**
+  String get activityResultExcellent;
+
+  /// No description provided for @activityResultGood.
+  ///
+  /// In ar, this message translates to:
+  /// **'أحسنت! 🌟'**
+  String get activityResultGood;
+
+  /// No description provided for @activityResultOk.
+  ///
+  /// In ar, this message translates to:
+  /// **'جيد! استمر 💙'**
+  String get activityResultOk;
+
+  /// No description provided for @activityResultSuccessRate.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة الإجابات الصحيحة'**
+  String get activityResultSuccessRate;
+
+  /// No description provided for @activityResultStars.
+  ///
+  /// In ar, this message translates to:
+  /// **'النجوم المكتسبة'**
+  String get activityResultStars;
+
+  /// No description provided for @activityLevelUp.
+  ///
+  /// In ar, this message translates to:
+  /// **'ارتقيت من {from} إلى {to}!'**
+  String activityLevelUp(String from, String to);
+
+  /// No description provided for @activityBreakSuggestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُفضل أخذ استراحة قصيرة قبل النشاط القادم'**
+  String get activityBreakSuggestion;
+
+  /// No description provided for @skillLevelBeginner.
+  ///
+  /// In ar, this message translates to:
+  /// **'مبتدئ'**
+  String get skillLevelBeginner;
+
+  /// No description provided for @skillLevelIntermediate.
+  ///
+  /// In ar, this message translates to:
+  /// **'متوسط'**
+  String get skillLevelIntermediate;
+
+  /// No description provided for @skillLevelAdvanced.
+  ///
+  /// In ar, this message translates to:
+  /// **'متقدم'**
+  String get skillLevelAdvanced;
+
+  /// No description provided for @chooseSkillTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مهارة'**
+  String get chooseSkillTitle;
+
+  /// No description provided for @randomActivity.
+  ///
+  /// In ar, this message translates to:
+  /// **'نشاط عشوائي 🎲'**
+  String get randomActivity;
+
+  /// No description provided for @questionOf.
+  ///
+  /// In ar, this message translates to:
+  /// **'سؤال {current} من {total}'**
+  String questionOf(int current, int total);
 }
 
 class _AppLocalizationsDelegate

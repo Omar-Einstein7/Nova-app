@@ -338,5 +338,90 @@
   "@statSuccess": {},
 
   "viewFullProgress": "عرض سجل التقدم الكامل",
-  "@viewFullProgress": {}
+  "@viewFullProgress": {},
+
+  "activityGenerating": "بنجهز لك نشاط جميل...",
+  "@activityGenerating": {},
+
+  "activityGeneratingPatience": "لسّه شوية... شكراً لصبرك 😊",
+  "@activityGeneratingPatience": {},
+
+  "activityStartButton": "ابدأ اللعب 🚀",
+  "@activityStartButton": {},
+
+  "activityNextButton": "التالي ➡️",
+  "@activityNextButton": {},
+
+  "activityRetryButton": "حاول مرة أخرى 💪",
+  "@activityRetryButton": {},
+
+  "activityFinishButton": "اعرض النتيجة 🎉",
+  "@activityFinishButton": {},
+
+  "activityPlayAgain": "نشاط آخر 🎮",
+  "@activityPlayAgain": {},
+
+  "activityGoHome": "العودة للرئيسية",
+  "@activityGoHome": {},
+
+  "activityExitTitle": "خروج من النشاط",
+  "@activityExitTitle": {},
+
+  "activityExitConfirm": "تحب تكمل ولا تخرج؟",
+  "@activityExitConfirm": {},
+
+  "activityExitContinue": "أكمل",
+  "@activityExitContinue": {},
+
+  "activityExitLeave": "اخرج",
+  "@activityExitLeave": {},
+
+  "activityResultExcellent": "ممتاز! 🏆",
+  "@activityResultExcellent": {},
+
+  "activityResultGood": "أحسنت! 🌟",
+  "@activityResultGood": {},
+
+  "activityResultOk": "جيد! استمر 💙",
+  "@activityResultOk": {},
+
+  "activityResultSuccessRate": "نسبة الإجابات الصحيحة",
+  "@activityResultSuccessRate": {},
+
+  "activityResultStars": "النجوم المكتسبة",
+  "@activityResultStars": {},
+
+  "activityLevelUp": "ارتقيت من {from} إلى {to}!",
+  "@activityLevelUp": {
+    "placeholders": {
+      "from": { "type": "String" },
+      "to": { "type": "String" }
+    }
+  },
+
+  "activityBreakSuggestion": "يُفضل أخذ استراحة قصيرة قبل النشاط القادم",
+  "@activityBreakSuggestion": {},
+
+  "skillLevelBeginner": "مبتدئ",
+  "@skillLevelBeginner": {},
+
+  "skillLevelIntermediate": "متوسط",
+  "@skillLevelIntermediate": {},
+
+  "skillLevelAdvanced": "متقدم",
+  "@skillLevelAdvanced": {},
+
+  "chooseSkillTitle": "اختر مهارة",
+  "@chooseSkillTitle": {},
+
+  "randomActivity": "نشاط عشوائي 🎲",
+  "@randomActivity": {},
+
+  "questionOf": "سؤال {current} من {total}",
+  "@questionOf": {
+    "placeholders": {
+      "current": { "type": "int" },
+      "total": { "type": "int" }
+    }
+  }
 }

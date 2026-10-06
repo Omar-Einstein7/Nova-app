@@ -30,6 +30,12 @@ import '../../features/children/domain/usecases/children_use_cases.dart';
 import '../../features/children/presentation/cubit/children_list_cubit.dart';
 import '../../features/children/presentation/cubit/child_form_cubit.dart';
 import '../../features/home/presentation/cubit/dashboard_cubit.dart';
+import '../../features/activity/data/datasources/activity_remote_data_source.dart';
+import '../../features/activity/data/datasources/fake_activity_data_source.dart';
+import '../../features/activity/data/repositories/activity_repository_impl.dart';
+import '../../features/activity/domain/repositories/activity_repository.dart';
+import '../../features/activity/domain/usecases/activity_use_cases.dart';
+import '../../features/activity/presentation/bloc/activity_player_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -73,6 +79,7 @@ Future<void> configureDependencies() async {
   registerAuthFeature(getIt);
   registerSkillsFeature(getIt);
   registerChildrenFeature(getIt);
+  registerActivityFeature(getIt);
 }
 
 /// Register auth feature dependencies.
@@ -170,6 +177,39 @@ void registerChildrenFeature(GetIt sl) {
   sl.registerLazySingleton<DashboardCubitFactory>(
     () => DashboardCubitFactory(
       dataSource: sl<ChildrenRemoteDataSource>(),
+    ),
+  );
+}
+
+/// Register activity feature dependencies.
+void registerActivityFeature(GetIt sl) {
+  // Data
+  sl.registerLazySingleton<ActivityRemoteDataSource>(
+    () => ActivityRemoteDataSource(sl<Dio>()),
+  );
+  sl.registerLazySingleton<FakeActivityDataSource>(
+    () => FakeActivityDataSource(),
+  );
+  sl.registerLazySingleton<ActivityRepository>(
+    () => ActivityRepositoryImpl(
+      remoteDataSource: sl<ActivityRemoteDataSource>(),
+      fakeDataSource: sl<FakeActivityDataSource>(),
+    ),
+  );
+
+  // Domain
+  sl.registerLazySingleton(() => GenerateActivityUseCase(sl<ActivityRepository>()));
+  sl.registerLazySingleton(() => StartSessionUseCase(sl<ActivityRepository>()));
+  sl.registerLazySingleton(() => SubmitAnswerUseCase(sl<ActivityRepository>()));
+  sl.registerLazySingleton(() => CompleteSessionUseCase(sl<ActivityRepository>()));
+
+  // Presentation — factory so each page gets a fresh Bloc
+  sl.registerFactory<ActivityPlayerBloc>(
+    () => ActivityPlayerBloc(
+      generateActivity: sl<GenerateActivityUseCase>(),
+      startSession: sl<StartSessionUseCase>(),
+      submitAnswer: sl<SubmitAnswerUseCase>(),
+      completeSession: sl<CompleteSessionUseCase>(),
     ),
   );
 }

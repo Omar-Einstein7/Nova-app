@@ -14,28 +14,35 @@ import '../cubit/dashboard_cubit.dart';
 import '../cubit/dashboard_state.dart';
 
 class ChildDashboardPage extends StatelessWidget {
-  const ChildDashboardPage({super.key, required this.childId});
+  const ChildDashboardPage({
+    super.key,
+    required this.childId,
+    this.initialChild,
+  });
+
   final String childId;
+  final Child? initialChild;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<DashboardCubit>(
       create: (_) => getIt<DashboardCubitFactory>().create(childId)..load(),
-      child: _DashboardView(childId: childId),
+      child: _DashboardView(childId: childId, initialChild: initialChild),
     );
   }
 }
 
 class _DashboardView extends StatelessWidget {
-  const _DashboardView({required this.childId});
+  const _DashboardView({required this.childId, this.initialChild});
   final String childId;
+  final Child? initialChild;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<DashboardCubit, DashboardState>(
       builder: (context, state) {
-        // Resolve child from list cubit (already loaded)
-        final child = _findChild(context, childId);
+        // Resolve child from initial parameter or list cubit if available
+        final child = initialChild ?? _findChild(context, childId);
 
         return Scaffold(
           backgroundColor: AppColors.background,
@@ -67,7 +74,11 @@ class _DashboardView extends StatelessWidget {
                       const SizedBox(height: 20),
 
                       // ── Recommendation card ──────────────────────────────
-                      _RecommendationCard(state: state, childId: childId),
+                      _RecommendationCard(
+                        state: state,
+                        childId: childId,
+                        child: child,
+                      ),
                       const SizedBox(height: 20),
 
                       // ── Quick stats ──────────────────────────────────────
@@ -88,12 +99,16 @@ class _DashboardView extends StatelessWidget {
   }
 
   Child? _findChild(BuildContext context, String id) {
-    final state = context.read<ChildrenListCubit>().state;
-    if (state is ChildrenListStateLoaded) {
-      return state.children.cast<Child?>().firstWhere(
-            (c) => c?.id == id,
-            orElse: () => null,
-          );
+    try {
+      final listState = context.read<ChildrenListCubit>().state;
+      if (listState is ChildrenListStateLoaded) {
+        return listState.children.cast<Child?>().firstWhere(
+              (c) => c?.id == id,
+              orElse: () => null,
+            );
+      }
+    } catch (_) {
+      // ChildrenListCubit is not above this page in the provider tree
     }
     return null;
   }
@@ -230,9 +245,14 @@ class _StartPlayButton extends StatelessWidget {
 // ── Recommendation card ───────────────────────────────────────────────────────
 
 class _RecommendationCard extends StatelessWidget {
-  const _RecommendationCard({required this.state, required this.childId});
+  const _RecommendationCard({
+    required this.state,
+    required this.childId,
+    this.child,
+  });
   final DashboardState state;
   final String childId;
+  final Child? child;
 
   @override
   Widget build(BuildContext context) {
@@ -270,10 +290,19 @@ class _RecommendationCard extends StatelessWidget {
               ),
               TextButton(
                 key: const Key('choose_skill_btn'),
-                onPressed: () => context.pushNamed('activity', extra: {
-                  'childId': childId,
-                  'choosingSkill': true,
-                }),
+                onPressed: () {
+                  if (child != null) {
+                    context.pushNamed(
+                      'startActivity',
+                      pathParameters: {'childId': childId},
+                      extra: {'child': child},
+                    );
+                  } else {
+                    context.pushNamed('activity', extra: {
+                      'childId': childId,
+                    });
+                  }
+                },
                 child: Text(l.chooseSkill,
                     style:
                         const TextStyle(color: AppColors.secondary)),

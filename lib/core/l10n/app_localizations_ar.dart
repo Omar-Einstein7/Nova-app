@@ -350,4 +350,84 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get viewFullProgress => 'عرض سجل التقدم الكامل';
+
+  @override
+  String get activityGenerating => 'بنجهز لك نشاط جميل...';
+
+  @override
+  String get activityGeneratingPatience => 'لسّه شوية... شكراً لصبرك 😊';
+
+  @override
+  String get activityStartButton => 'ابدأ اللعب 🚀';
+
+  @override
+  String get activityNextButton => 'التالي ➡️';
+
+  @override
+  String get activityRetryButton => 'حاول مرة أخرى 💪';
+
+  @override
+  String get activityFinishButton => 'اعرض النتيجة 🎉';
+
+  @override
+  String get activityPlayAgain => 'نشاط آخر 🎮';
+
+  @override
+  String get activityGoHome => 'العودة للرئيسية';
+
+  @override
+  String get activityExitTitle => 'خروج من النشاط';
+
+  @override
+  String get activityExitConfirm => 'تحب تكمل ولا تخرج؟';
+
+  @override
+  String get activityExitContinue => 'أكمل';
+
+  @override
+  String get activityExitLeave => 'اخرج';
+
+  @override
+  String get activityResultExcellent => 'ممتاز! 🏆';
+
+  @override
+  String get activityResultGood => 'أحسنت! 🌟';
+
+  @override
+  String get activityResultOk => 'جيد! استمر 💙';
+
+  @override
+  String get activityResultSuccessRate => 'نسبة الإجابات الصحيحة';
+
+  @override
+  String get activityResultStars => 'النجوم المكتسبة';
+
+  @override
+  String activityLevelUp(String from, String to) {
+    return 'ارتقيت من $from إلى $to!';
+  }
+
+  @override
+  String get activityBreakSuggestion =>
+      'يُفضل أخذ استراحة قصيرة قبل النشاط القادم';
+
+  @override
+  String get skillLevelBeginner => 'مبتدئ';
+
+  @override
+  String get skillLevelIntermediate => 'متوسط';
+
+  @override
+  String get skillLevelAdvanced => 'متقدم';
+
+  @override
+  String get chooseSkillTitle => 'اختر مهارة';
+
+  @override
+  String get randomActivity => 'نشاط عشوائي 🎲';
+
+  @override
+  String questionOf(int current, int total) {
+    return 'سؤال $current من $total';
+  }
 }

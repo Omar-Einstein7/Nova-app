@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/l10n/app_localizations.dart';
+import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/empty_view.dart';
@@ -160,8 +161,9 @@ class _ChildrenBody extends StatelessWidget {
             key: ValueKey(child.id),
             child: child,
             onTap: () => context.pushNamed(
-              'childDashboard',
+              RouteNames.childDashboard,
               pathParameters: {'childId': child.id},
+              extra: child,
             ),
             onEdit: () => context.pushNamed(
               'editChild',
