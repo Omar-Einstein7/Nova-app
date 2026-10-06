@@ -198,5 +198,145 @@
   "@showPassword": {},
 
   "hidePassword": "إخفاء كلمة المرور",
-  "@hidePassword": {}
+  "@hidePassword": {},
+
+  "addChildButton": "إضافة طفل",
+  "@addChildButton": {},
+
+  "addChildTitle": "إضافة طفل جديد",
+  "@addChildTitle": {},
+
+  "editChildTitle": "تعديل بيانات الطفل",
+  "@editChildTitle": {},
+
+  "homeNoChildren": "لم تقم بإضافة أي طفل بعد.\nابدأ بإضافة طفلك الأول لاكتشاف الأنشطة التعليمية.",
+  "@homeNoChildren": {},
+
+  "deleteChildTitle": "حذف الملف",
+  "@deleteChildTitle": {},
+
+  "deleteChildConfirm": "هل أنت متأكد من حذف ملف {name}؟ لا يمكن التراجع عن هذا الإجراء.",
+  "@deleteChildConfirm": {
+    "placeholders": {
+      "name": { "type": "String" }
+    }
+  },
+
+  "edit": "تعديل",
+  "@edit": {},
+
+  "delete": "حذف",
+  "@delete": {},
+
+  "childAgeLabel": "{age} سنوات",
+  "@childAgeLabel": {
+    "placeholders": {
+      "age": { "type": "int" }
+    }
+  },
+
+  "childNameLabel": "اسم الطفل",
+  "@childNameLabel": {},
+
+  "childNameHint": "مثال: عمر",
+  "@childNameHint": {},
+
+  "childNameTooLong": "يجب ألا يتجاوز الاسم 40 حرفاً.",
+  "@childNameTooLong": {},
+
+  "birthDateLabel": "تاريخ الميلاد",
+  "@birthDateLabel": {},
+
+  "selectBirthDate": "اختر تاريخ الميلاد",
+  "@selectBirthDate": {},
+
+  "childAgeOutOfRange": "يجب أن يكون عمر الطفل بين 3 و18 سنة.",
+  "@childAgeOutOfRange": {},
+
+  "avatarLabel": "اختر صورة تعبيرية",
+  "@avatarLabel": {},
+
+  "interestsLabel": "الاهتمامات",
+  "@interestsLabel": {},
+
+  "interestsHint": "اختر اهتمامات طفلك لتخصيص الأنشطة (حتى 10 اهتمامات)",
+  "@interestsHint": {},
+
+  "addCustomInterestHint": "إضافة اهتمام مخصص…",
+  "@addCustomInterestHint": {},
+
+  "learningStyleLabel": "أسلوب التعلم المفضل",
+  "@learningStyleLabel": {},
+
+  "learningStyleVisual": "بصري",
+  "@learningStyleVisual": {},
+
+  "learningStyleVisualDesc": "يتعلم بشكل أفضل من خلال الصور والرموز والأشكال",
+  "@learningStyleVisualDesc": {},
+
+  "learningStyleAuditory": "سمعي",
+  "@learningStyleAuditoryDesc": {},
+
+  "learningStyleAuditoryDesc": "يتعلم بشكل أفضل من خلال الصوت والتوجيه السمعي",
+  "@learningStyleAuditoryDesc": {},
+
+  "learningStyleMixed": "مختلط",
+  "@learningStyleMixed": {},
+
+  "learningStyleMixedDesc": "مزيج متوازن بين البصري والسمعي",
+  "@learningStyleMixedDesc": {},
+
+  "selectSkillsLabel": "المهارات المستهدفة",
+  "@selectSkillsLabel": {},
+
+  "selectSkillsHint": "حدد المهارات التي تود التركيز عليها",
+  "@selectSkillsHint": {},
+
+  "selectLearningStyle": "يرجى تحديد أسلوب التعلم",
+  "@selectLearningStyle": {},
+
+  "selectAtLeastOneSkill": "يرجى اختيار مهارة واحدة على الأقل",
+  "@selectAtLeastOneSkill": {},
+
+  "childSavedSuccess": "تم حفظ بيانات الطفل بنجاح",
+  "@childSavedSuccess": {},
+
+  "maxChildrenReached": "لقد وصلت إلى الحد الأقصى للأطفال (5 أطفال).",
+  "@maxChildrenReached": {},
+
+  "back": "السابق",
+  "@back": {},
+
+  "save": "حفظ",
+  "@save": {},
+
+  "startPlay": "ابدأ النشاط",
+  "@startPlay": {},
+
+  "todaySuggestion": "اقتراح اليوم",
+  "@todaySuggestion": {},
+
+  "generalSkill": "مهارة عامة",
+  "@generalSkill": {},
+
+  "chooseSkill": "اختر مهارة أخرى",
+  "@chooseSkill": {},
+
+  "suggestBreak": "يُفضل أخذ استراحة قصيرة",
+  "@suggestBreak": {},
+
+  "progressUnavailable": "بيانات التقدم غير متوفرة حالياً",
+  "@progressUnavailable": {},
+
+  "statSessions": "الجلسات",
+  "@statSessions": {},
+
+  "statStreak": "أيام متتالية",
+  "@statStreak": {},
+
+  "statSuccess": "نسبة النجاح",
+  "@statSuccess": {},
+
+  "viewFullProgress": "عرض سجل التقدم الكامل",
+  "@viewFullProgress": {}
 }

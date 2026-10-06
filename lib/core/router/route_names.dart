@@ -1,4 +1,4 @@
-﻿/// Centralised route name constants.
+/// Centralised route name constants.
 abstract final class RouteNames {
   static const String splash = "splash";
   static const String onboarding = "onboarding";
@@ -13,6 +13,7 @@ abstract final class RouteNames {
   static const String addChild = "addChild";
   static const String editChild = "editChild";
   static const String childDetail = "childDetail";
+  static const String childDashboard = "childDashboard";
 
   // Activity
   static const String activity = "activity";

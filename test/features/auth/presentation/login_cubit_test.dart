@@ -29,12 +29,12 @@ void main() {
     registerFallbackValue(const Left<Failure, User>(Failure.unauthorized()));
   });
 
-  LoginCubit _buildCubit() =>
+  LoginCubit buildCubit() =>
       LoginCubit(loginUseCase: loginUseCase);
 
   group('LoginCubit', () {
     test('initial state is LoginStateInitial', () {
-      expect(_buildCubit().state, const LoginState.initial());
+      expect(buildCubit().state, const LoginState.initial());
     });
 
     blocTest<LoginCubit, LoginState>(
@@ -44,7 +44,7 @@ void main() {
           () => loginUseCase(email: _tEmail, password: _tPassword),
         ).thenAnswer((_) async => const Right(_tUser));
       },
-      build: _buildCubit,
+      build: buildCubit,
       act: (c) => c.submit(email: _tEmail, password: _tPassword),
       expect: () => [
         const LoginState.loading(),
@@ -59,7 +59,7 @@ void main() {
           () => loginUseCase(email: _tEmail, password: _tPassword),
         ).thenAnswer((_) async => const Left(Failure.unauthorized()));
       },
-      build: _buildCubit,
+      build: buildCubit,
       act: (c) => c.submit(email: _tEmail, password: _tPassword),
       expect: () => [
         const LoginState.loading(),
@@ -76,7 +76,7 @@ void main() {
           (_) async => const Left(Failure.network(message: 'no internet')),
         );
       },
-      build: _buildCubit,
+      build: buildCubit,
       act: (c) => c.submit(email: _tEmail, password: _tPassword),
       expect: () => [
         const LoginState.loading(),
@@ -94,7 +94,7 @@ void main() {
           return const Right(_tUser);
         });
       },
-      build: _buildCubit,
+      build: buildCubit,
       act: (c) async {
         // Fire first submit (goes to loading)
         unawaited(c.submit(email: _tEmail, password: _tPassword));

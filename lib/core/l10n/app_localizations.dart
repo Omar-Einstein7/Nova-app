@@ -471,6 +471,270 @@ abstract class AppLocalizations {
   /// In ar, this message translates to:
   /// **'إخفاء كلمة المرور'**
   String get hidePassword;
+
+  /// No description provided for @addChildButton.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة طفل'**
+  String get addChildButton;
+
+  /// No description provided for @addChildTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة طفل جديد'**
+  String get addChildTitle;
+
+  /// No description provided for @editChildTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل بيانات الطفل'**
+  String get editChildTitle;
+
+  /// No description provided for @homeNoChildren.
+  ///
+  /// In ar, this message translates to:
+  /// **'لم تقم بإضافة أي طفل بعد.\nابدأ بإضافة طفلك الأول لاكتشاف الأنشطة التعليمية.'**
+  String get homeNoChildren;
+
+  /// No description provided for @deleteChildTitle.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف الملف'**
+  String get deleteChildTitle;
+
+  /// No description provided for @deleteChildConfirm.
+  ///
+  /// In ar, this message translates to:
+  /// **'هل أنت متأكد من حذف ملف {name}؟ لا يمكن التراجع عن هذا الإجراء.'**
+  String deleteChildConfirm(String name);
+
+  /// No description provided for @edit.
+  ///
+  /// In ar, this message translates to:
+  /// **'تعديل'**
+  String get edit;
+
+  /// No description provided for @delete.
+  ///
+  /// In ar, this message translates to:
+  /// **'حذف'**
+  String get delete;
+
+  /// No description provided for @childAgeLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'{age} سنوات'**
+  String childAgeLabel(int age);
+
+  /// No description provided for @childNameLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اسم الطفل'**
+  String get childNameLabel;
+
+  /// No description provided for @childNameHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'مثال: عمر'**
+  String get childNameHint;
+
+  /// No description provided for @childNameTooLong.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب ألا يتجاوز الاسم 40 حرفاً.'**
+  String get childNameTooLong;
+
+  /// No description provided for @birthDateLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'تاريخ الميلاد'**
+  String get birthDateLabel;
+
+  /// No description provided for @selectBirthDate.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر تاريخ الميلاد'**
+  String get selectBirthDate;
+
+  /// No description provided for @childAgeOutOfRange.
+  ///
+  /// In ar, this message translates to:
+  /// **'يجب أن يكون عمر الطفل بين 3 و18 سنة.'**
+  String get childAgeOutOfRange;
+
+  /// No description provided for @avatarLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر صورة تعبيرية'**
+  String get avatarLabel;
+
+  /// No description provided for @interestsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'الاهتمامات'**
+  String get interestsLabel;
+
+  /// No description provided for @interestsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر اهتمامات طفلك لتخصيص الأنشطة (حتى 10 اهتمامات)'**
+  String get interestsHint;
+
+  /// No description provided for @addCustomInterestHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'إضافة اهتمام مخصص…'**
+  String get addCustomInterestHint;
+
+  /// No description provided for @learningStyleLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'أسلوب التعلم المفضل'**
+  String get learningStyleLabel;
+
+  /// No description provided for @learningStyleVisual.
+  ///
+  /// In ar, this message translates to:
+  /// **'بصري'**
+  String get learningStyleVisual;
+
+  /// No description provided for @learningStyleVisualDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتعلم بشكل أفضل من خلال الصور والرموز والأشكال'**
+  String get learningStyleVisualDesc;
+
+  /// No description provided for @learningStyleAuditory.
+  ///
+  /// In ar, this message translates to:
+  /// **'سمعي'**
+  String get learningStyleAuditory;
+
+  /// No description provided for @learningStyleAuditoryDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'يتعلم بشكل أفضل من خلال الصوت والتوجيه السمعي'**
+  String get learningStyleAuditoryDesc;
+
+  /// No description provided for @learningStyleMixed.
+  ///
+  /// In ar, this message translates to:
+  /// **'مختلط'**
+  String get learningStyleMixed;
+
+  /// No description provided for @learningStyleMixedDesc.
+  ///
+  /// In ar, this message translates to:
+  /// **'مزيج متوازن بين البصري والسمعي'**
+  String get learningStyleMixedDesc;
+
+  /// No description provided for @selectSkillsLabel.
+  ///
+  /// In ar, this message translates to:
+  /// **'المهارات المستهدفة'**
+  String get selectSkillsLabel;
+
+  /// No description provided for @selectSkillsHint.
+  ///
+  /// In ar, this message translates to:
+  /// **'حدد المهارات التي تود التركيز عليها'**
+  String get selectSkillsHint;
+
+  /// No description provided for @selectLearningStyle.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى تحديد أسلوب التعلم'**
+  String get selectLearningStyle;
+
+  /// No description provided for @selectAtLeastOneSkill.
+  ///
+  /// In ar, this message translates to:
+  /// **'يرجى اختيار مهارة واحدة على الأقل'**
+  String get selectAtLeastOneSkill;
+
+  /// No description provided for @childSavedSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'تم حفظ بيانات الطفل بنجاح'**
+  String get childSavedSuccess;
+
+  /// No description provided for @maxChildrenReached.
+  ///
+  /// In ar, this message translates to:
+  /// **'لقد وصلت إلى الحد الأقصى للأطفال (5 أطفال).'**
+  String get maxChildrenReached;
+
+  /// No description provided for @back.
+  ///
+  /// In ar, this message translates to:
+  /// **'السابق'**
+  String get back;
+
+  /// No description provided for @save.
+  ///
+  /// In ar, this message translates to:
+  /// **'حفظ'**
+  String get save;
+
+  /// No description provided for @startPlay.
+  ///
+  /// In ar, this message translates to:
+  /// **'ابدأ النشاط'**
+  String get startPlay;
+
+  /// No description provided for @todaySuggestion.
+  ///
+  /// In ar, this message translates to:
+  /// **'اقتراح اليوم'**
+  String get todaySuggestion;
+
+  /// No description provided for @generalSkill.
+  ///
+  /// In ar, this message translates to:
+  /// **'مهارة عامة'**
+  String get generalSkill;
+
+  /// No description provided for @chooseSkill.
+  ///
+  /// In ar, this message translates to:
+  /// **'اختر مهارة أخرى'**
+  String get chooseSkill;
+
+  /// No description provided for @suggestBreak.
+  ///
+  /// In ar, this message translates to:
+  /// **'يُفضل أخذ استراحة قصيرة'**
+  String get suggestBreak;
+
+  /// No description provided for @progressUnavailable.
+  ///
+  /// In ar, this message translates to:
+  /// **'بيانات التقدم غير متوفرة حالياً'**
+  String get progressUnavailable;
+
+  /// No description provided for @statSessions.
+  ///
+  /// In ar, this message translates to:
+  /// **'الجلسات'**
+  String get statSessions;
+
+  /// No description provided for @statStreak.
+  ///
+  /// In ar, this message translates to:
+  /// **'أيام متتالية'**
+  String get statStreak;
+
+  /// No description provided for @statSuccess.
+  ///
+  /// In ar, this message translates to:
+  /// **'نسبة النجاح'**
+  String get statSuccess;
+
+  /// No description provided for @viewFullProgress.
+  ///
+  /// In ar, this message translates to:
+  /// **'عرض سجل التقدم الكامل'**
+  String get viewFullProgress;
 }
 
 class _AppLocalizationsDelegate

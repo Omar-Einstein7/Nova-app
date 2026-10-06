@@ -1,10 +1,10 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 
 /// NOVA text field with Arabic-first RTL support.
 class AppTextField extends StatelessWidget {
   const AppTextField({
     super.key,
-    required this.label,
+    this.label = "",
     this.hint,
     this.controller,
     this.obscureText = false,
@@ -44,7 +44,7 @@ class AppTextField extends StatelessWidget {
       autofillHints: autofillHints,
       textDirection: TextDirection.rtl,
       decoration: InputDecoration(
-        labelText: label,
+        labelText: label.isNotEmpty ? label : null,
         hintText: hint,
         suffixIcon: suffixIcon,
         prefixIcon: prefixIcon,

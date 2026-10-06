@@ -8,7 +8,10 @@ import '../../features/auth/presentation/pages/register_page.dart';
 import '../../features/auth/presentation/pages/splash_page.dart';
 import '../../features/home/presentation/pages/home_page.dart';
 import '../../features/onboarding/presentation/pages/onboarding_page.dart';
+import '../../features/children/domain/entities/child.dart';
 import '../../features/children/presentation/pages/children_page.dart';
+import '../../features/home/presentation/pages/child_dashboard_page.dart';
+import '../../features/home/presentation/pages/child_form_page.dart';
 import '../../features/progress/presentation/pages/progress_page.dart';
 import '../../features/settings/presentation/pages/settings_page.dart';
 import '../../features/activity/presentation/pages/activity_page.dart';
@@ -90,6 +93,25 @@ GoRouter buildRouter({
             path: 'children',
             name: RouteNames.children,
             builder: (_, __) => const ChildrenPage(),
+          ),
+          GoRoute(
+            path: 'children/add',
+            name: RouteNames.addChild,
+            builder: (_, __) => const ChildFormPage(),
+          ),
+          GoRoute(
+            path: 'children/:childId/edit',
+            name: RouteNames.editChild,
+            builder: (_, state) => ChildFormPage(
+              existing: state.extra as Child?,
+            ),
+          ),
+          GoRoute(
+            path: 'children/:childId/dashboard',
+            name: RouteNames.childDashboard,
+            builder: (_, state) => ChildDashboardPage(
+              childId: state.pathParameters['childId']!,
+            ),
           ),
           GoRoute(
             path: 'activity',

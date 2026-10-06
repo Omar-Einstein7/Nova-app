@@ -209,4 +209,145 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hidePassword => 'إخفاء كلمة المرور';
+
+  @override
+  String get addChildButton => 'إضافة طفل';
+
+  @override
+  String get addChildTitle => 'إضافة طفل جديد';
+
+  @override
+  String get editChildTitle => 'تعديل بيانات الطفل';
+
+  @override
+  String get homeNoChildren =>
+      'لم تقم بإضافة أي طفل بعد.\nابدأ بإضافة طفلك الأول لاكتشاف الأنشطة التعليمية.';
+
+  @override
+  String get deleteChildTitle => 'حذف الملف';
+
+  @override
+  String deleteChildConfirm(String name) {
+    return 'هل أنت متأكد من حذف ملف $name؟ لا يمكن التراجع عن هذا الإجراء.';
+  }
+
+  @override
+  String get edit => 'تعديل';
+
+  @override
+  String get delete => 'حذف';
+
+  @override
+  String childAgeLabel(int age) {
+    return '$age سنوات';
+  }
+
+  @override
+  String get childNameLabel => 'اسم الطفل';
+
+  @override
+  String get childNameHint => 'مثال: عمر';
+
+  @override
+  String get childNameTooLong => 'يجب ألا يتجاوز الاسم 40 حرفاً.';
+
+  @override
+  String get birthDateLabel => 'تاريخ الميلاد';
+
+  @override
+  String get selectBirthDate => 'اختر تاريخ الميلاد';
+
+  @override
+  String get childAgeOutOfRange => 'يجب أن يكون عمر الطفل بين 3 و18 سنة.';
+
+  @override
+  String get avatarLabel => 'اختر صورة تعبيرية';
+
+  @override
+  String get interestsLabel => 'الاهتمامات';
+
+  @override
+  String get interestsHint =>
+      'اختر اهتمامات طفلك لتخصيص الأنشطة (حتى 10 اهتمامات)';
+
+  @override
+  String get addCustomInterestHint => 'إضافة اهتمام مخصص…';
+
+  @override
+  String get learningStyleLabel => 'أسلوب التعلم المفضل';
+
+  @override
+  String get learningStyleVisual => 'بصري';
+
+  @override
+  String get learningStyleVisualDesc =>
+      'يتعلم بشكل أفضل من خلال الصور والرموز والأشكال';
+
+  @override
+  String get learningStyleAuditory => 'سمعي';
+
+  @override
+  String get learningStyleAuditoryDesc =>
+      'يتعلم بشكل أفضل من خلال الصوت والتوجيه السمعي';
+
+  @override
+  String get learningStyleMixed => 'مختلط';
+
+  @override
+  String get learningStyleMixedDesc => 'مزيج متوازن بين البصري والسمعي';
+
+  @override
+  String get selectSkillsLabel => 'المهارات المستهدفة';
+
+  @override
+  String get selectSkillsHint => 'حدد المهارات التي تود التركيز عليها';
+
+  @override
+  String get selectLearningStyle => 'يرجى تحديد أسلوب التعلم';
+
+  @override
+  String get selectAtLeastOneSkill => 'يرجى اختيار مهارة واحدة على الأقل';
+
+  @override
+  String get childSavedSuccess => 'تم حفظ بيانات الطفل بنجاح';
+
+  @override
+  String get maxChildrenReached =>
+      'لقد وصلت إلى الحد الأقصى للأطفال (5 أطفال).';
+
+  @override
+  String get back => 'السابق';
+
+  @override
+  String get save => 'حفظ';
+
+  @override
+  String get startPlay => 'ابدأ النشاط';
+
+  @override
+  String get todaySuggestion => 'اقتراح اليوم';
+
+  @override
+  String get generalSkill => 'مهارة عامة';
+
+  @override
+  String get chooseSkill => 'اختر مهارة أخرى';
+
+  @override
+  String get suggestBreak => 'يُفضل أخذ استراحة قصيرة';
+
+  @override
+  String get progressUnavailable => 'بيانات التقدم غير متوفرة حالياً';
+
+  @override
+  String get statSessions => 'الجلسات';
+
+  @override
+  String get statStreak => 'أيام متتالية';
+
+  @override
+  String get statSuccess => 'نسبة النجاح';
+
+  @override
+  String get viewFullProgress => 'عرض سجل التقدم الكامل';
 }

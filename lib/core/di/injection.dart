@@ -18,6 +18,18 @@ import '../../features/auth/domain/usecases/register_use_case.dart';
 import '../../features/auth/domain/usecases/restore_session_use_case.dart';
 import '../../features/auth/domain/usecases/update_name_use_case.dart';
 import '../../features/auth/presentation/cubit/auth_cubit.dart';
+import '../../features/skills/data/datasources/skills_remote_data_source.dart';
+import '../../features/skills/data/repositories/skills_repository_impl.dart';
+import '../../features/skills/domain/repositories/skills_repository.dart';
+import '../../features/skills/domain/usecases/get_skills_use_case.dart';
+import '../../features/skills/presentation/cubit/skills_cubit.dart';
+import '../../features/children/data/datasources/children_remote_data_source.dart';
+import '../../features/children/data/repositories/children_repository_impl.dart';
+import '../../features/children/domain/repositories/children_repository.dart';
+import '../../features/children/domain/usecases/children_use_cases.dart';
+import '../../features/children/presentation/cubit/children_list_cubit.dart';
+import '../../features/children/presentation/cubit/child_form_cubit.dart';
+import '../../features/home/presentation/cubit/dashboard_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -59,6 +71,8 @@ Future<void> configureDependencies() async {
 
   // ── Feature registrations ─────────────────────────────────────────────────
   registerAuthFeature(getIt);
+  registerSkillsFeature(getIt);
+  registerChildrenFeature(getIt);
 }
 
 /// Register auth feature dependencies.
@@ -94,6 +108,68 @@ void registerAuthFeature(GetIt sl) {
     () => AuthCubit(
       restoreSessionUseCase: sl<RestoreSessionUseCase>(),
       logoutUseCase: sl<LogoutUseCase>(),
+    ),
+  );
+}
+
+/// Register skills feature dependencies.
+void registerSkillsFeature(GetIt sl) {
+  // Data
+  sl.registerLazySingleton<SkillsRemoteDataSource>(
+    () => SkillsRemoteDataSource(sl<Dio>()),
+  );
+  sl.registerLazySingleton<SkillsRepositoryImpl>(
+    () => SkillsRepositoryImpl(remoteDataSource: sl<SkillsRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<SkillsRepository>(
+    () => sl<SkillsRepositoryImpl>(),
+  );
+
+  // Domain
+  sl.registerLazySingleton(() => GetSkillsUseCase(sl<SkillsRepository>()));
+
+  // Presentation — cached for session
+  sl.registerLazySingleton<SkillsCubit>(
+    () => SkillsCubit(getSkillsUseCase: sl<GetSkillsUseCase>()),
+  );
+}
+
+/// Register children feature dependencies.
+void registerChildrenFeature(GetIt sl) {
+  // Data
+  sl.registerLazySingleton<ChildrenRemoteDataSource>(
+    () => ChildrenRemoteDataSource(sl<Dio>()),
+  );
+  sl.registerLazySingleton<ChildrenRepositoryImpl>(
+    () => ChildrenRepositoryImpl(remoteDataSource: sl<ChildrenRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<ChildrenRepository>(
+    () => sl<ChildrenRepositoryImpl>(),
+  );
+
+  // Domain use cases
+  sl.registerLazySingleton(() => GetChildrenUseCase(sl<ChildrenRepository>()));
+  sl.registerLazySingleton(() => GetChildUseCase(sl<ChildrenRepository>()));
+  sl.registerLazySingleton(() => CreateChildUseCase(sl<ChildrenRepository>()));
+  sl.registerLazySingleton(() => UpdateChildUseCase(sl<ChildrenRepository>()));
+  sl.registerLazySingleton(() => DeleteChildUseCase(sl<ChildrenRepository>()));
+
+  // Presentation
+  sl.registerFactory<ChildrenListCubit>(
+    () => ChildrenListCubit(
+      getChildren: sl<GetChildrenUseCase>(),
+      deleteChild: sl<DeleteChildUseCase>(),
+    ),
+  );
+  sl.registerLazySingleton<ChildFormCubitFactory>(
+    () => ChildFormCubitFactory(
+      createChild: sl<CreateChildUseCase>(),
+      updateChild: sl<UpdateChildUseCase>(),
+    ),
+  );
+  sl.registerLazySingleton<DashboardCubitFactory>(
+    () => DashboardCubitFactory(
+      dataSource: sl<ChildrenRemoteDataSource>(),
     ),
   );
 }

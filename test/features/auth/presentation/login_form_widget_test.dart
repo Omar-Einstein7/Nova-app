@@ -170,13 +170,13 @@ void main() {
     authCubit.close();
   });
 
-  LoginCubit _buildLoginCubit() =>
+  LoginCubit buildLoginCubit() =>
       LoginCubit(loginUseCase: loginUseCase);
 
   group('Login form validation', () {
     testWidgets('shows email-required error on empty submit', (tester) async {
       await tester.pumpWidget(_harness(
-        loginCubit: _buildLoginCubit(),
+        loginCubit: buildLoginCubit(),
         authCubit: authCubit,
       ));
       await tester.pumpAndSettle();
@@ -189,7 +189,7 @@ void main() {
 
     testWidgets('shows invalid-email error for malformed email', (tester) async {
       await tester.pumpWidget(_harness(
-        loginCubit: _buildLoginCubit(),
+        loginCubit: buildLoginCubit(),
         authCubit: authCubit,
       ));
       await tester.pumpAndSettle();
@@ -205,7 +205,7 @@ void main() {
     testWidgets('shows password-required error when password is empty',
         (tester) async {
       await tester.pumpWidget(_harness(
-        loginCubit: _buildLoginCubit(),
+        loginCubit: buildLoginCubit(),
         authCubit: authCubit,
       ));
       await tester.pumpAndSettle();
@@ -221,7 +221,7 @@ void main() {
     testWidgets('shows weak-password error for password without digit',
         (tester) async {
       await tester.pumpWidget(_harness(
-        loginCubit: _buildLoginCubit(),
+        loginCubit: buildLoginCubit(),
         authCubit: authCubit,
       ));
       await tester.pumpAndSettle();
@@ -247,7 +247,7 @@ void main() {
         return const Left(Failure.network());
       });
 
-      final cubit = _buildLoginCubit();
+      final cubit = buildLoginCubit();
       await tester.pumpWidget(_harness(
         loginCubit: cubit,
         authCubit: authCubit,
