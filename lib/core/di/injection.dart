@@ -38,8 +38,8 @@ Future<void> configureDependencies() async {
   // ── Network ──────────────────────────────────────────────────────────────
   // [PLACEHOLDER: BASE_URL must be supplied via --dart-define=BASE_URL=https://...]
   const baseUrl = String.fromEnvironment(
-    'http://192.168.1.4:3000/api/v1',
-    defaultValue: 'http://192.168.1.4:3000/api/v1',
+    'http://192.168.1.2:3000/api/v1',
+    defaultValue: 'http://192.168.1.2:3000/api/v1',
   );
 
   final refreshDio = DioClient.createRefreshDio();
