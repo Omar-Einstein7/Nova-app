@@ -129,8 +129,9 @@ class AuthRemoteDataSource {
       final err = body['error'] as Map<String, dynamic>?;
       final code = err?['code'] as String? ?? 'UNKNOWN';
       final message = err?['message'] as String? ?? 'خطأ في الخادم';
-      if (code == 'VALIDATION_ERROR')
+      if (code == 'VALIDATION_ERROR') {
         return Failure.validation(details: err?['details']);
+      }
       return Failure.server(code: code, message: message);
     }
     return Failure.unknown(message: e.message);

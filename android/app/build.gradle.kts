@@ -5,7 +5,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.nova"
+    namespace = "com.nova.app"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.nova"
+        applicationId = "com.nova.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -27,6 +27,20 @@ android {
         // flag during build.
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+    }
+
+    flavorDimensions += "default"
+
+    productFlavors {
+        create("production") {
+            dimension = "default"
+            resValue("string", "app_name", "Nova")
+        }
+        create("development") {
+            dimension = "default"
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Nova dev")
+        }
     }
 
     buildTypes {

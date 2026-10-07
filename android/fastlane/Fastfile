@@ -1,0 +1,34 @@
+default_platform(:android)
+
+platform :android do
+  # desc "Runs all unit/widget tests"
+  # lane :test do
+  #   sh "flutter test"
+  # end
+
+  # desc "Build Development APK"
+  # lane :build_development do
+  #   sh "flutter build apk --flavor development --target lib/main_development.dart"
+  # end
+
+  # desc "Build Production Release APK"
+  # lane :build_production do
+  #   sh "flutter build apk --release --flavor production --target lib/main_production.dart --no-tree-shake-icons"
+  # end
+
+  desc "Lane for Android Firebase App Distribution"
+  lane :firebase_distribution do
+    sh "flutter clean"
+    sh "flutter build apk --release --flavor production --target lib/main_production.dart --no-tree-shake-icons"
+    # [PLACEHOLDER: Uncomment when FIREBASE_CLI_TOKEN is set in CI]
+    firebase_app_distribution(
+      app: "1:817112290717:android:a99b51b749f75ac93b0b74",
+      firebase_cli_token: "1//03mC0GietqfoXCgYIARAAGAMSNgF-L9IrO8EWsTu3BphDV9LcxxIcg5fKWdMlIHIzz1Cc6p5tuCdNoqMwDu9mOqiT0W3EeSez3Q",
+      android_artifact_type: "APK",
+      android_artifact_path: "../build/app/outputs/flutter-apk/app-production-release.apk",
+      testers: "omarhan113355@gmail.com",
+      groups: "QA-Team",
+      release_notes: "first note"
+    )
+  end
+end
