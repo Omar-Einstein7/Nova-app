@@ -134,10 +134,10 @@ GoRouter buildRouter({
             },
           ),
           GoRoute(
-            path: 'progress',
+            path: 'children/:childId/progress',
             name: RouteNames.progress,
             builder: (_, state) => ProgressPage(
-              childId: state.uri.queryParameters['childId'] ?? '',
+              childId: state.pathParameters['childId']!,
             ),
           ),
           GoRoute(

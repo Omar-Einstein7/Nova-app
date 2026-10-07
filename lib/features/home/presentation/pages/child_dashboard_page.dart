@@ -447,8 +447,10 @@ class _ProgressLink extends StatelessWidget {
     final l = AppLocalizations.of(context);
     return TextButton.icon(
       key: const Key('full_progress_link'),
-      onPressed: () =>
-          context.pushNamed('progress', queryParameters: {'childId': childId}),
+      onPressed: () => context.pushNamed(
+        'progress',
+        pathParameters: {'childId': childId},
+      ),
       icon: const Icon(Icons.bar_chart_outlined, color: AppColors.primary),
       label: Text(l.viewFullProgress,
           style: const TextStyle(color: AppColors.primary)),

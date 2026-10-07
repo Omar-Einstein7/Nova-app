@@ -36,6 +36,13 @@ import '../../features/activity/data/repositories/activity_repository_impl.dart'
 import '../../features/activity/domain/repositories/activity_repository.dart';
 import '../../features/activity/domain/usecases/activity_use_cases.dart';
 import '../../features/activity/presentation/bloc/activity_player_bloc.dart';
+import '../../features/progress/data/datasources/progress_remote_data_source.dart';
+import '../../features/progress/data/repositories/progress_repository_impl.dart';
+import '../../features/progress/domain/repositories/progress_repository.dart';
+import '../../features/progress/domain/usecases/progress_use_cases.dart';
+import '../../features/progress/presentation/cubit/progress_cubit.dart';
+import '../../features/progress/presentation/cubit/sessions_history_cubit.dart';
+import '../../features/settings/presentation/cubit/settings_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -56,8 +63,8 @@ Future<void> configureDependencies() async {
   // ── Network ──────────────────────────────────────────────────────────────
   // [PLACEHOLDER: BASE_URL must be supplied via --dart-define=BASE_URL=https://...]
   const baseUrl = String.fromEnvironment(
-    'http://192.168.1.2:3000/api/v1',
-    defaultValue: 'http://192.168.1.2:3000/api/v1',
+    'http://192.168.1.6:3000/api/v1',
+    defaultValue: 'http://192.168.1.6:3000/api/v1',
   );
 
   final refreshDio = DioClient.createRefreshDio();
@@ -80,6 +87,8 @@ Future<void> configureDependencies() async {
   registerSkillsFeature(getIt);
   registerChildrenFeature(getIt);
   registerActivityFeature(getIt);
+  registerProgressFeature(getIt);
+  registerSettingsFeature(getIt);
 }
 
 /// Register auth feature dependencies.
@@ -211,5 +220,36 @@ void registerActivityFeature(GetIt sl) {
       submitAnswer: sl<SubmitAnswerUseCase>(),
       completeSession: sl<CompleteSessionUseCase>(),
     ),
+  );
+}
+
+/// Register progress feature dependencies.
+void registerProgressFeature(GetIt sl) {
+  // Data
+  sl.registerLazySingleton<ProgressRemoteDataSource>(
+    () => ProgressRemoteDataSource(sl<Dio>()),
+  );
+  sl.registerLazySingleton<ProgressRepositoryImpl>(
+    () => ProgressRepositoryImpl(remoteDataSource: sl<ProgressRemoteDataSource>()),
+  );
+  sl.registerLazySingleton<ProgressRepository>(
+    () => sl<ProgressRepositoryImpl>(),
+  );
+
+  // Domain
+  sl.registerLazySingleton(() => GetProgressOverviewUseCase(sl<ProgressRepository>()));
+  sl.registerLazySingleton(() => GetSkillChartUseCase(sl<ProgressRepository>()));
+  sl.registerLazySingleton(() => GetSessionsUseCase(sl<ProgressRepository>()));
+
+  // Presentation
+  sl.registerLazySingleton<ProgressCubitFactory>(
+    () => ProgressCubitFactory(getOverview: sl<GetProgressOverviewUseCase>()),
+  );
+}
+
+/// Register settings feature dependencies.
+void registerSettingsFeature(GetIt sl) {
+  sl.registerLazySingleton<SettingsCubit>(
+    () => SettingsCubit(prefs: sl<Prefs>()),
   );
 }
