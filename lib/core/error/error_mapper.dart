@@ -1,5 +1,39 @@
-﻿import "package:dio/dio.dart";
+import "package:dio/dio.dart";
 import "failures.dart";
+
+/// Converts any [Failure] to a clear, calm, user-facing Arabic message.
+/// Includes dedicated offline detection messaging for network failures.
+String failureToArabicMessage(Failure failure) {
+  return failure.when(
+    network: (_) =>
+        "لا يوجد اتصال بالإنترنت. يرجى التحقق من الشبكة والمحاولة مجدداً 📶",
+    timeout: () => "انتهت مهلة الانتظار. يرجى المحاولة مرة أخرى.",
+    server: (code, message, details) {
+      if (code == "CONFLICT") {
+        return message.isNotEmpty ? message : "هذا العنصر موجود بالفعل.";
+      }
+      if (code == "NOT_FOUND") {
+        return "لم يتم العثور على البيانات المطلوبة.";
+      }
+      if (code == "RATE_LIMITED") {
+        return "يرجى الانتظار قليلاً قبل المحاولة مجدداً.";
+      }
+      return message.isNotEmpty
+          ? message
+          : "خطأ في الخادم، يرجى المحاولة لاحقاً.";
+    },
+    unauthorized: () => "انتهت صلاحية الجلسة. يرجى تسجيل الدخول مجدداً.",
+    validation: (details) {
+      if (details != null && details.toString().isNotEmpty) {
+        return "يرجى مراجعة البيانات المدخلة: $details";
+      }
+      return "يرجى التحقق من صحة البيانات المدخلة.";
+    },
+    unknown: (msg) => msg?.isNotEmpty == true
+        ? msg!
+        : "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+  );
+}
 
 /// Maps DioException and server error codes to [Failure].
 final class ErrorMapper {
@@ -25,8 +59,7 @@ final class ErrorMapper {
         if (body is Map<String, dynamic>) {
           final error = body["error"] as Map<String, dynamic>?;
           final code = error?["code"] as String? ?? "UNKNOWN";
-          final message =
-              error?["message"] as String? ?? "خطأ غير معروف";
+          final message = error?["message"] as String? ?? "خطأ غير معروف";
           final details = error?["details"];
 
           if (code == "VALIDATION_ERROR") {
@@ -52,17 +85,6 @@ final class ErrorMapper {
   }
 
   /// Convert [Failure] to a user-facing Arabic string.
-  /// (Pre-localisation version – replaced by failureToArabicMessage once
-  /// AppLocalizations is available in context.)
-  static String toArabicMessage(Failure failure) {
-    return failure.when(
-      network: (_) => "تعذّر الاتصال بالإنترنت. تحقق من اتصالك وحاول مجدداً.",
-      timeout: () => "انتهت مهلة الاتصال. يرجى المحاولة مجدداً.",
-      server: (code, message, __) => "خطأ في الخادم: $message",
-      unauthorized: () => "انتهت الجلسة. يرجى تسجيل الدخول مجدداً.",
-      validation: (_) => "البيانات المدخلة غير صحيحة.",
-      unknown: (msg) => msg ?? "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
-    );
-  }
+  static String toArabicMessage(Failure failure) =>
+      failureToArabicMessage(failure);
 }
-

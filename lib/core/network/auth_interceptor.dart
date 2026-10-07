@@ -1,4 +1,4 @@
-﻿import "dart:async";
+import "dart:async";
 import "package:dio/dio.dart";
 import "../storage/secure_storage.dart";
 import "api_endpoints.dart";
@@ -58,7 +58,8 @@ final class AuthInterceptor extends QueuedInterceptor {
     if (_isRefreshing) {
       // Queue this request to be retried once refresh finishes
       final completer = Completer<Response<dynamic>>();
-      _pendingRequests.add(_PendingRequest(options: options, completer: completer));
+      _pendingRequests
+          .add(_PendingRequest(options: options, completer: completer));
       try {
         final retried = await completer.future;
         handler.resolve(retried);

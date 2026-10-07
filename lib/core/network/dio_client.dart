@@ -1,4 +1,5 @@
 import "package:dio/dio.dart";
+import "../services/logger.dart";
 import "auth_interceptor.dart";
 
 /// Factory that builds the primary [Dio] instance for the app.
@@ -23,17 +24,13 @@ final class DioClient {
       ..interceptors.add(authInterceptor)
       ..interceptors.add(
         LogInterceptor(
-          requestBody: false, // never log bodies – may contain credentials
+          requestBody: false, // never log bodies – may contain credentials/PII
           responseBody: false,
+          requestHeader:
+              false, // never log headers – may contain authorization tokens
+          responseHeader: false,
           logPrint: (obj) {
-            // [PLACEHOLDER: Integrate a proper logger (e.g. logger package)
-            //  and remove print in production]
-            // ignore: avoid_print
-            assert(() {
-              // ignore: avoid_print
-              print("[DIO] $obj");
-              return true;
-            }());
+            AppLogger.debug("[DIO] $obj");
           },
         ),
       );

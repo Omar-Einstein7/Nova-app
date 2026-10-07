@@ -103,8 +103,7 @@ class FakeActivityDataSource {
 
     // Extract and store correct answers, then strip from model
     _correctAnswers = {};
-    final rawQuestions =
-        raw['questions'] as List<dynamic>;
+    final rawQuestions = raw['questions'] as List<dynamic>;
     final cleanQuestions = rawQuestions.map((q) {
       final qMap = Map<String, dynamic>.from(q as Map<String, dynamic>);
       final idx = (qMap['index'] as num).toInt();

@@ -31,8 +31,7 @@ class ActivityRepositoryImpl implements ActivityRepository {
               skillId: skillId, difficulty: difficulty);
 
   @override
-  Future<Either<Failure, ActivitySession>> startSession(
-          String activityId) =>
+  Future<Either<Failure, ActivitySession>> startSession(String activityId) =>
       _useMock
           ? fakeDataSource.startSession(activityId)
           : remoteDataSource.startSession(activityId);

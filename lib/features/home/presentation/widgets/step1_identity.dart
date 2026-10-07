@@ -178,9 +178,18 @@ class _AvatarGrid extends StatelessWidget {
   final void Function(String) onSelect;
 
   static const _avatars = [
-    ('0', '🐱'), ('1', '🐶'), ('2', '🦊'), ('3', '🐼'),
-    ('4', '🦁'), ('5', '🐸'), ('6', '🦋'), ('7', '🐧'),
-    ('8', '🐨'), ('9', '🦄'), ('10', '🐰'), ('11', '🐻'),
+    ('0', '🐱'),
+    ('1', '🐶'),
+    ('2', '🦊'),
+    ('3', '🐼'),
+    ('4', '🦁'),
+    ('5', '🐸'),
+    ('6', '🦋'),
+    ('7', '🐧'),
+    ('8', '🐨'),
+    ('9', '🦄'),
+    ('10', '🐰'),
+    ('11', '🐻'),
   ];
 
   @override
@@ -216,8 +225,8 @@ class _AvatarGrid extends StatelessWidget {
                   : null,
             ),
             child: Center(
-              child: Text(emoji,
-                  style: TextStyle(fontSize: isSelected ? 28 : 24)),
+              child:
+                  Text(emoji, style: TextStyle(fontSize: isSelected ? 28 : 24)),
             ),
           ),
         );

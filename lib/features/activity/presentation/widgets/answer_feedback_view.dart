@@ -31,9 +31,8 @@ class AnswerFeedbackView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emoji = isCorrect ? '🌟' : (isMaxAttempts ? '💙' : '💙');
-    final bgColor = isCorrect
-        ? const Color(0xFFE8F5E9)
-        : const Color(0xFFFFF8E1);
+    final bgColor =
+        isCorrect ? const Color(0xFFE8F5E9) : const Color(0xFFFFF8E1);
 
     return Container(
       decoration: BoxDecoration(
@@ -57,7 +56,6 @@ class AnswerFeedbackView extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.xxl),
-
           if (_canProceed)
             SizedBox(
               width: double.infinity,

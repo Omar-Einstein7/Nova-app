@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -56,8 +55,7 @@ class _SettingsView extends StatelessWidget {
                   title: 'الأصوات',
                   subtitle: 'تشغيل أصوات ردود الفعل',
                   value: settings.soundOn,
-                  onChanged: (v) =>
-                      context.read<SettingsCubit>().setSoundOn(v),
+                  onChanged: (v) => context.read<SettingsCubit>().setSoundOn(v),
                 ),
                 const Divider(height: 1, indent: 56),
                 _SwitchTile(
@@ -65,8 +63,7 @@ class _SettingsView extends StatelessWidget {
                   title: 'قراءة الأسئلة',
                   subtitle: 'قراءة الأسئلة تلقائياً بالصوت',
                   value: settings.ttsOn,
-                  onChanged: (v) =>
-                      context.read<SettingsCubit>().setTtsOn(v),
+                  onChanged: (v) => context.read<SettingsCubit>().setTtsOn(v),
                 ),
                 const Divider(height: 1, indent: 56),
                 _SwitchTile(
@@ -170,7 +167,7 @@ class _FontScaleCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.06),
+            color: AppColors.primary.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -185,8 +182,8 @@ class _FontScaleCard extends StatelessWidget {
             padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
             child: Text(
               'معاينة: مرحباً بك في نوفا',
-              style: AppTextStyles.bodyLarge
-                  .copyWith(fontSize: 16 * currentScale),
+              style:
+                  AppTextStyles.bodyLarge.copyWith(fontSize: 16 * currentScale),
             ),
           ),
           const Divider(),
@@ -254,7 +251,8 @@ class _AccountNameTile extends StatelessWidget {
     final name = authState is AuthStateAuthenticated ? authState.user.name : '';
 
     return ListTile(
-      leading: const Icon(Icons.person_outline_rounded, color: AppColors.primary),
+      leading:
+          const Icon(Icons.person_outline_rounded, color: AppColors.primary),
       title: const Text('الاسم'),
       subtitle: Text(name, style: AppTextStyles.caption),
       trailing: const Icon(Icons.edit_outlined, size: 18),
@@ -359,7 +357,8 @@ class _DeleteAccountTile extends StatelessWidget {
             TextField(
               controller: pwdCtrl,
               obscureText: true,
-              decoration: const InputDecoration(labelText: 'كلمة المرور للتأكيد'),
+              decoration:
+                  const InputDecoration(labelText: 'كلمة المرور للتأكيد'),
             ),
           ],
         ),
@@ -378,8 +377,7 @@ class _DeleteAccountTile extends StatelessWidget {
       ),
     );
     if (confirmed != true || !context.mounted) return;
-    final result =
-        await getIt<DeleteAccountUseCase>()(pwdCtrl.text.trim());
+    final result = await getIt<DeleteAccountUseCase>()(pwdCtrl.text.trim());
     if (!context.mounted) return;
     result.fold(
       (_) => ScaffoldMessenger.of(context).showSnackBar(
@@ -433,12 +431,11 @@ class _SectionHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.only(
-          start: 4, bottom: AppSpacing.sm),
+      padding:
+          const EdgeInsetsDirectional.only(start: 4, bottom: AppSpacing.sm),
       child: Text(
         title,
-        style: AppTextStyles.titleSmall
-            .copyWith(color: AppColors.primary),
+        style: AppTextStyles.titleSmall.copyWith(color: AppColors.primary),
       ),
     );
   }
@@ -456,7 +453,7 @@ class _SettingsCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.06),
+            color: AppColors.primary.withValues(alpha: 0.06),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -491,7 +488,7 @@ class _SwitchTile extends StatelessWidget {
       subtitle: Text(subtitle, style: AppTextStyles.caption),
       value: value,
       onChanged: onChanged,
-      activeColor: AppColors.primary,
+      activeThumbColor: AppColors.primary,
     );
   }
 }

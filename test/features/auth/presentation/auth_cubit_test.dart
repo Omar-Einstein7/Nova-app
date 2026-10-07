@@ -185,8 +185,7 @@ void main() {
 
   group('routerListenable', () {
     test('notifies listeners after restoreSession', () async {
-      when(() => restoreSession())
-          .thenAnswer((_) async => const Right(_user));
+      when(() => restoreSession()).thenAnswer((_) async => const Right(_user));
       final cubit = buildCubit();
       var notified = false;
       cubit.routerListenable.addListener(() => notified = true);

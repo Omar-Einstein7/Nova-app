@@ -29,8 +29,7 @@ void main() {
     registerFallbackValue(const Left<Failure, User>(Failure.unauthorized()));
   });
 
-  LoginCubit buildCubit() =>
-      LoginCubit(loginUseCase: loginUseCase);
+  LoginCubit buildCubit() => LoginCubit(loginUseCase: loginUseCase);
 
   group('LoginCubit', () {
     test('initial state is LoginStateInitial', () {

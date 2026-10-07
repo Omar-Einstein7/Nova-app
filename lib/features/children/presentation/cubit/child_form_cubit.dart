@@ -133,8 +133,8 @@ class ChildFormCubit extends Cubit<ChildFormState> {
 
     result.fold(
       (f) => emit(state.copyWith(status: ChildFormStatus.failure, failure: f)),
-      (child) =>
-          emit(state.copyWith(status: ChildFormStatus.success, savedChild: child)),
+      (child) => emit(
+          state.copyWith(status: ChildFormStatus.success, savedChild: child)),
     );
   }
 

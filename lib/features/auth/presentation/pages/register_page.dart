@@ -207,7 +207,8 @@ class _RegisterViewState extends State<_RegisterView> {
 
   static String? _validateEmail(String? v, AppLocalizations l10n) {
     if (v == null || v.trim().isEmpty) return l10n.validationEmailRequired;
-    final emailRegex = RegExp(r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$');
+    final emailRegex =
+        RegExp(r'^[a-zA-Z0-9._%+\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$');
     if (!emailRegex.hasMatch(v.trim())) return l10n.validationEmailInvalid;
     return null;
   }

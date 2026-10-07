@@ -80,6 +80,14 @@ class SessionSummary extends Equatable {
   final String status;
 
   @override
-  List<Object?> get props =>
-      [id, activityTitle, skillKey, startedAt, durationMs, successRate, stars, status];
+  List<Object?> get props => [
+        id,
+        activityTitle,
+        skillKey,
+        startedAt,
+        durationMs,
+        successRate,
+        stars,
+        status
+      ];
 }

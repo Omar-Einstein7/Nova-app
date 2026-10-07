@@ -66,8 +66,9 @@ void main() {
       setUp: () {
         when(() => mockDataSource.getNextRecommendation('c1'))
             .thenAnswer((_) async => const Right(_tRecommendation));
-        when(() => mockDataSource.getProgress('c1', range: '7d'))
-            .thenAnswer((_) async => const Left(Failure.server(code: 'INTERNAL', message: 'error')));
+        when(() => mockDataSource.getProgress('c1', range: '7d')).thenAnswer(
+            (_) async =>
+                const Left(Failure.server(code: 'INTERNAL', message: 'error')));
       },
       build: buildCubit,
       act: (c) => c.load(),

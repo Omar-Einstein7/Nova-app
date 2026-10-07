@@ -31,7 +31,8 @@ class ChildrenRemoteDataSource {
   Future<Either<Failure, ChildModel>> getChild(String id) async {
     try {
       final res = await _dio.get<Map<String, dynamic>>('/children/$id');
-      return Right(ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
+      return Right(
+          ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));
     } catch (e) {
@@ -46,7 +47,8 @@ class ChildrenRemoteDataSource {
     try {
       final res =
           await _dio.post<Map<String, dynamic>>('/children', data: body);
-      return Right(ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
+      return Right(
+          ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));
     } catch (e) {
@@ -61,7 +63,8 @@ class ChildrenRemoteDataSource {
     try {
       final res =
           await _dio.patch<Map<String, dynamic>>('/children/$id', data: body);
-      return Right(ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
+      return Right(
+          ChildModel.fromJson(res.data!['data'] as Map<String, dynamic>));
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));
     } catch (e) {
@@ -87,8 +90,8 @@ class ChildrenRemoteDataSource {
   Future<Either<Failure, Map<String, dynamic>>> getNextRecommendation(
       String childId) async {
     try {
-      final res = await _dio.get<Map<String, dynamic>>(
-          '/children/$childId/recommendations/next');
+      final res = await _dio
+          .get<Map<String, dynamic>>('/children/$childId/recommendations/next');
       return Right(res.data!['data'] as Map<String, dynamic>);
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));

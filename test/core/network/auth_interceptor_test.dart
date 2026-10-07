@@ -68,8 +68,7 @@ void main() {
 
   group("AuthInterceptor refresh-queue logic (unit)", () {
     test("getRefreshToken is called on 401 protected path", () async {
-      when(() => storage.getAccessToken())
-          .thenAnswer((_) async => "tok");
+      when(() => storage.getAccessToken()).thenAnswer((_) async => "tok");
       when(() => storage.getRefreshToken())
           .thenAnswer((_) async => null); // No refresh token
       when(() => storage.clearTokens()).thenAnswer((_) async {});

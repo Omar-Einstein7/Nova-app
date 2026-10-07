@@ -81,8 +81,9 @@ class AuthCubit extends Cubit<AuthState> {
   bool get isAuthenticated => state is AuthStateAuthenticated;
 
   /// The currently authenticated user, or null.
-  User? get currentUser =>
-      state is AuthStateAuthenticated ? (state as AuthStateAuthenticated).user : null;
+  User? get currentUser => state is AuthStateAuthenticated
+      ? (state as AuthStateAuthenticated).user
+      : null;
 
   @override
   Future<void> close() {

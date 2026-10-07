@@ -57,8 +57,16 @@ class Activity extends Equatable {
   final String source;
 
   @override
-  List<Object?> get props =>
-      [id, skillId, difficulty, title, description, questions, feedback, source];
+  List<Object?> get props => [
+        id,
+        skillId,
+        difficulty,
+        title,
+        description,
+        questions,
+        feedback,
+        source
+      ];
 }
 
 /// A session started for an activity (POST /activities/:id/sessions).

@@ -170,8 +170,7 @@ void main() {
     authCubit.close();
   });
 
-  LoginCubit buildLoginCubit() =>
-      LoginCubit(loginUseCase: loginUseCase);
+  LoginCubit buildLoginCubit() => LoginCubit(loginUseCase: loginUseCase);
 
   group('Login form validation', () {
     testWidgets('shows email-required error on empty submit', (tester) async {
@@ -187,7 +186,8 @@ void main() {
       expect(find.text('البريد الإلكتروني مطلوب.'), findsOneWidget);
     });
 
-    testWidgets('shows invalid-email error for malformed email', (tester) async {
+    testWidgets('shows invalid-email error for malformed email',
+        (tester) async {
       await tester.pumpWidget(_harness(
         loginCubit: buildLoginCubit(),
         authCubit: authCubit,

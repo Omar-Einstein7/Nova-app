@@ -1,4 +1,4 @@
-﻿import "package:fpdart/fpdart.dart";
+import "package:fpdart/fpdart.dart";
 import "../error/error.dart";
 
 /// Parsed server envelope.
@@ -24,7 +24,8 @@ final class ApiResponse<T> {
         return Left(Failure.validation(details: details));
       }
       if (code == "UNAUTHORIZED") return const Left(Failure.unauthorized());
-      return Left(Failure.server(code: code, message: message, details: details));
+      return Left(
+          Failure.server(code: code, message: message, details: details));
     }
     try {
       return Right(fromData(json["data"]));

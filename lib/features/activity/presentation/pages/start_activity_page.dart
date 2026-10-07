@@ -55,96 +55,94 @@ class _StartActivityPageState extends State<StartActivityPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SkillsCubit>.value(
-      value: getIt<SkillsCubit>()..load(),
-      child: Scaffold(
-      backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: AppColors.background,
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'اختر مهارة',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
-        leading: BackButton(color: AppColors.primary),
-      ),
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.xl),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // Child greeting
-              _ChildHeader(child: widget.child),
-              const SizedBox(height: AppSpacing.xxl),
+        value: getIt<SkillsCubit>()..load(),
+        child: Scaffold(
+          backgroundColor: AppColors.background,
+          appBar: AppBar(
+            backgroundColor: AppColors.background,
+            elevation: 0,
+            centerTitle: true,
+            title: const Text(
+              'اختر مهارة',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            leading: BackButton(color: AppColors.primary),
+          ),
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(AppSpacing.xl),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  // Child greeting
+                  _ChildHeader(child: widget.child),
+                  const SizedBox(height: AppSpacing.xxl),
 
-              Text(
-                'مهارات ${widget.child.name}',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-              ),
-              const SizedBox(height: AppSpacing.md),
+                  Text(
+                    'مهارات ${widget.child.name}',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: AppColors.textSecondary,
+                        ),
+                  ),
+                  const SizedBox(height: AppSpacing.md),
 
-              // Skills list
-              Expanded(
-                child: widget.child.skills.isEmpty
-                    ? const _NoSkillsView()
-                    : BlocBuilder<SkillsCubit, SkillsState>(
-                        builder: (context, skillsState) {
-                          final allSkills = skillsState
-                              .maybeWhen(
-                                loaded: (s) => s,
-                                orElse: () => <dynamic>[],
-                              )
-                              .cast<dynamic>();
+                  // Skills list
+                  Expanded(
+                    child: widget.child.skills.isEmpty
+                        ? const _NoSkillsView()
+                        : BlocBuilder<SkillsCubit, SkillsState>(
+                            builder: (context, skillsState) {
+                              final allSkills = skillsState
+                                  .maybeWhen(
+                                    loaded: (s) => s,
+                                    orElse: () => <dynamic>[],
+                                  )
+                                  .cast<dynamic>();
 
-                          return ListView.separated(
-                            itemCount: widget.child.skills.length,
-                            separatorBuilder: (_, __) =>
-                                const SizedBox(height: AppSpacing.md),
-                            itemBuilder: (context, index) {
-                              final childSkill =
-                                  widget.child.skills[index];
-                              final skillName = _findSkillName(
-                                allSkills,
-                                childSkill.skillId,
-                                childSkill.key,
-                              );
-                              return _SkillCard(
-                                skillId: childSkill.skillId,
-                                name: skillName,
-                                level: childSkill.level,
-                                onTap: () =>
-                                    _navigate(childSkill.skillId),
+                              return ListView.separated(
+                                itemCount: widget.child.skills.length,
+                                separatorBuilder: (_, __) =>
+                                    const SizedBox(height: AppSpacing.md),
+                                itemBuilder: (context, index) {
+                                  final childSkill = widget.child.skills[index];
+                                  final skillName = _findSkillName(
+                                    allSkills,
+                                    childSkill.skillId,
+                                    childSkill.key,
+                                  );
+                                  return _SkillCard(
+                                    skillId: childSkill.skillId,
+                                    name: skillName,
+                                    level: childSkill.level,
+                                    onTap: () => _navigate(childSkill.skillId),
+                                  );
+                                },
                               );
                             },
-                          );
-                        },
-                      ),
-              ),
-              const SizedBox(height: AppSpacing.xl),
-
-              // Generate without specific skill
-              OutlinedButton(
-                onPressed: () => _navigate(null),
-                style: OutlinedButton.styleFrom(
-                  minimumSize: const Size.fromHeight(52),
-                  side: BorderSide(color: AppColors.primary),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
+                          ),
                   ),
-                ),
-                child: Text(
-                  'نشاط عشوائي 🎲',
-                  style: TextStyle(color: AppColors.primary, fontSize: 16),
-                ),
+                  const SizedBox(height: AppSpacing.xl),
+
+                  // Generate without specific skill
+                  OutlinedButton(
+                    onPressed: () => _navigate(null),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size.fromHeight(52),
+                      side: BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(14),
+                      ),
+                    ),
+                    child: Text(
+                      'نشاط عشوائي 🎲',
+                      style: TextStyle(color: AppColors.primary, fontSize: 16),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
-    ));
+        ));
   }
 
   String _findSkillName(List<dynamic> skills, String id, String fallbackKey) {
@@ -186,8 +184,7 @@ class _ChildHeader extends StatelessWidget {
             radius: 28,
             backgroundColor: AppColors.primary.withValues(alpha: 0.2),
             child: Text(
-              child.avatar ??
-                  (child.name.isNotEmpty ? child.name[0] : '👤'),
+              child.avatar ?? (child.name.isNotEmpty ? child.name[0] : '👤'),
               style: const TextStyle(fontSize: 24),
             ),
           ),

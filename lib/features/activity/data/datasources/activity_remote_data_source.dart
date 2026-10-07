@@ -98,8 +98,7 @@ class ActivityRemoteDataSource {
         data: {'durationMs': durationMs},
       );
       return Right(
-        SessionResultModel.fromJson(
-            res.data!['data'] as Map<String, dynamic>),
+        SessionResultModel.fromJson(res.data!['data'] as Map<String, dynamic>),
       );
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));

@@ -23,6 +23,7 @@ class ActivityPlayerBloc
     on<ActivityRetryRequested>(_onRetryRequested);
     on<ActivityExitRequested>(_onExitRequested);
     on<ActivityRetryCurrentQuestion>(_onRetryCurrentQuestion);
+    on<ActivityHelpRequested>(_onHelpRequested);
   }
 
   final GenerateActivityUseCase generateActivity;
@@ -34,6 +35,14 @@ class ActivityPlayerBloc
   String? _childId;
   String? _skillId;
   String? _difficulty;
+  bool _usedHelpCurrentQuestion = false;
+
+  void _onHelpRequested(
+    ActivityHelpRequested event,
+    Emitter<ActivityPlayerState> emit,
+  ) {
+    _usedHelpCurrentQuestion = true;
+  }
 
   // ── Handlers ───────────────────────────────────────────────────────────────
 
@@ -108,7 +117,7 @@ class ActivityPlayerBloc
       questionIndex: currentState.questionIndex,
       selectedAnswer: event.answer,
       timeMs: timeMs,
-      usedHelp: false,
+      usedHelp: _usedHelpCurrentQuestion,
     );
 
     result.fold(
@@ -134,6 +143,7 @@ class ActivityPlayerBloc
     ActivityNextQuestion event,
     Emitter<ActivityPlayerState> emit,
   ) {
+    _usedHelpCurrentQuestion = false;
     final currentState = state;
     if (currentState is! ActivityPlayerAnswerFeedback) return;
 
@@ -171,8 +181,7 @@ class ActivityPlayerBloc
 
     emit(const ActivityPlayerCompleting());
 
-    final durationMs =
-        DateTime.now().millisecondsSinceEpoch - sessionStartMs;
+    final durationMs = DateTime.now().millisecondsSinceEpoch - sessionStartMs;
 
     final result = await completeSession(
       sessionId,

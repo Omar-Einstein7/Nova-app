@@ -1,4 +1,4 @@
-﻿import "dart:async";
+import "dart:async";
 
 /// Broadcast stream that emits a single event whenever the auth session
 /// expires (refresh token invalid / revoked).

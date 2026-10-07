@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/utils/nova_motion.dart';
 import '../../domain/entities/activity.dart';
 
 /// Full-screen result page shown after session is completed.
@@ -52,10 +53,9 @@ class _ResultViewState extends State<ResultView>
 
   @override
   Widget build(BuildContext context) {
-    final reduceMotion = MediaQuery.of(context).disableAnimations;
+    final reduceMotion = NovaMotion.shouldReduceMotion(context);
     final stars = widget.result.stars.clamp(1, 3);
-    final pct =
-        (widget.result.successRate * 100).round();
+    final pct = (widget.result.successRate * 100).round();
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -68,19 +68,22 @@ class _ResultViewState extends State<ResultView>
               const SizedBox(height: AppSpacing.xl),
 
               // Stars
-              ScaleTransition(
-                scale: reduceMotion
-                    ? AlwaysStoppedAnimation(1.0)
-                    : _scaleAnim,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    3,
-                    (i) => Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 6),
-                      child: Text(
-                        i < stars ? '⭐' : '☆',
-                        style: const TextStyle(fontSize: 48),
+              Semantics(
+                label: 'النتيجة: حصلت على $stars نجوم من أصل 3',
+                child: ScaleTransition(
+                  scale: reduceMotion
+                      ? const AlwaysStoppedAnimation(1.0)
+                      : _scaleAnim,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(
+                      3,
+                      (i) => Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: Text(
+                          i < stars ? '⭐' : '☆',
+                          style: const TextStyle(fontSize: 48),
+                        ),
                       ),
                     ),
                   ),
@@ -115,8 +118,7 @@ class _ResultViewState extends State<ResultView>
                 ),
                 child: Column(
                   children: [
-                    _StatRow(
-                        label: 'نسبة الإجابات الصحيحة', value: '$pct%'),
+                    _StatRow(label: 'نسبة الإجابات الصحيحة', value: '$pct%'),
                     const Divider(height: AppSpacing.xl),
                     _StatRow(
                         label: 'النجوم المكتسبة',
@@ -128,8 +130,7 @@ class _ResultViewState extends State<ResultView>
               // Level change
               if (widget.result.levelChange != null) ...[
                 const SizedBox(height: AppSpacing.lg),
-                _LevelChangeBadge(
-                    levelChange: widget.result.levelChange!),
+                _LevelChangeBadge(levelChange: widget.result.levelChange!),
               ],
 
               // Recommendation
@@ -147,39 +148,56 @@ class _ResultViewState extends State<ResultView>
               ],
 
               // Play again
-              SizedBox(
-                height: 64,
-                child: ElevatedButton(
-                  onPressed: widget.onPlayAgain,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.primary,
-                    foregroundColor: AppColors.textOnPrimary,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              Semantics(
+                button: true,
+                label: 'بدء نشاط تعليمي آخر',
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 64),
+                  child: ElevatedButton(
+                    onPressed: widget.onPlayAgain,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.primary,
+                      foregroundColor: AppColors.textOnPrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'نشاط آخر 🎮',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    child: const Text(
+                      'نشاط آخر 🎮',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    ),
                   ),
                 ),
               ),
               const SizedBox(height: AppSpacing.md),
 
               // Go home
-              SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: widget.onGoHome,
-                  style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+              Semantics(
+                button: true,
+                label: 'العودة إلى الصفحة الرئيسية',
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(minHeight: 52),
+                  child: OutlinedButton(
+                    onPressed: widget.onGoHome,
+                    style: OutlinedButton.styleFrom(
+                      side: const BorderSide(color: AppColors.primary),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: AppSpacing.lg,
+                        vertical: AppSpacing.md,
+                      ),
                     ),
-                  ),
-                  child: const Text(
-                    'العودة للرئيسية',
-                    style: TextStyle(fontSize: 16),
+                    child: const Text(
+                      'العودة للرئيسية',
+                      style: TextStyle(fontSize: 16),
+                    ),
                   ),
                 ),
               ),

@@ -90,8 +90,7 @@ class ProgressRemoteDataSource {
               skillId: s['skillId'] as String,
               key: s['key'] as String,
               nameAr: s['nameAr'] as String? ?? s['key'] as String,
-              avgSuccessRate:
-                  (s['avgSuccessRate'] as num?)?.toDouble() ?? 0.0,
+              avgSuccessRate: (s['avgSuccessRate'] as num?)?.toDouble() ?? 0.0,
               sessions: (s['sessions'] as num?)?.toInt() ?? 0,
               level: s['level'] as String? ?? 'BEGINNER',
             ))
@@ -113,8 +112,7 @@ class ProgressRemoteDataSource {
         avgSuccessRate: (d['avgSuccessRate'] as num).toDouble(),
       );
 
-  static SessionSummary _parseSession(Map<String, dynamic> d) =>
-      SessionSummary(
+  static SessionSummary _parseSession(Map<String, dynamic> d) => SessionSummary(
         id: d['id'] as String,
         activityTitle: d['activityTitle'] as String? ?? '',
         skillKey: d['skillKey'] as String? ?? '',

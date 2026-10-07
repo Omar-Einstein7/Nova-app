@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/error/error_mapper.dart';
+import '../../../../core/services/tts_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/parent_gate_dialog.dart';
@@ -30,8 +31,42 @@ class ActivityPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final childId = extra['childId'] as String?;
     if (childId == null || childId.isEmpty) {
-      return const Scaffold(
-        body: Center(child: Text('معرّف الطفل مفقود')),
+      // Graceful restoration fallback if activity state was killed mid-flow
+      return Scaffold(
+        backgroundColor: AppColors.background,
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xxl),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('🎈', style: TextStyle(fontSize: 56)),
+                const SizedBox(height: AppSpacing.lg),
+                Text(
+                  'لم نتمكن من استعادة النشاط السابق',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: AppColors.textPrimary,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: AppSpacing.sm),
+                Text(
+                  'يمكنك دائماً بدء نشاط جديد من لوحة الطفل.',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
+                  textAlign: TextAlign.center,
+                ),
+                const SizedBox(height: AppSpacing.xxl),
+                ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  child: const Text('العودة للرئيسية'),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
     }
 
@@ -65,52 +100,40 @@ class _ActivityPlayerView extends StatelessWidget {
       builder: (context, state) {
         Widget body;
 
-        if (state is ActivityPlayerGenerating ||
-            state is ActivityPlayerIdle) {
+        if (state is ActivityPlayerGenerating || state is ActivityPlayerIdle) {
           body = const GeneratingView();
         } else if (state is ActivityPlayerIntro) {
-          return PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (_, __) => _handleBack(context),
-            child: ActivityIntroView(
-              activity: state.activity,
-              onStart: () => context
-                  .read<ActivityPlayerBloc>()
-                  .add(const ActivityIntroConfirmed()),
-            ),
+          body = ActivityIntroView(
+            activity: state.activity,
+            onStart: () => context
+                .read<ActivityPlayerBloc>()
+                .add(const ActivityIntroConfirmed()),
           );
         } else if (state is ActivityPlayerStartingSession) {
           body = const _LoadingView(message: 'جارٍ تجهيز الجلسة...');
         } else if (state is ActivityPlayerQuestionActive ||
             state is ActivityPlayerSubmitting ||
             state is ActivityPlayerAnswerFeedback) {
-          return PopScope(
-            canPop: false,
-            onPopInvokedWithResult: (_, __) => _handleBack(context),
-            child: _QuestionScreen(state: state),
-          );
+          body = _QuestionScreen(state: state);
         } else if (state is ActivityPlayerCompleting) {
           body = const _LoadingView(message: 'جارٍ حساب نتيجتك...');
         } else if (state is ActivityPlayerResult) {
-          return PopScope(
-            canPop: false,
-            child: ResultView(
-              result: state.result,
-              onPlayAgain: () {
-                context
-                    .read<ActivityPlayerBloc>()
-                    .add(const ActivityRetryRequested());
-              },
-              onGoHome: () {
-                while (context.canPop()) {
-                  context.pop();
-                }
-              },
-            ),
+          body = ResultView(
+            result: state.result,
+            onPlayAgain: () {
+              context
+                  .read<ActivityPlayerBloc>()
+                  .add(const ActivityRetryRequested());
+            },
+            onGoHome: () {
+              while (context.canPop()) {
+                context.pop();
+              }
+            },
           );
         } else if (state is ActivityPlayerError) {
           body = _ErrorView(
-            message: ErrorMapper.toArabicMessage(state.failure),
+            message: failureToArabicMessage(state.failure),
             onRetry: () => context
                 .read<ActivityPlayerBloc>()
                 .add(const ActivityRetryRequested()),
@@ -122,9 +145,22 @@ class _ActivityPlayerView extends StatelessWidget {
           body = const GeneratingView();
         }
 
-        return Scaffold(
-          backgroundColor: AppColors.background,
-          body: body,
+        // Child Mode Navigation Safety:
+        // Back gesture on Android must pass Parent Gate so children cannot accidentally exit.
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, _) {
+            if (didPop) return;
+            if (state is ActivityPlayerResult) {
+              if (context.canPop()) context.pop();
+            } else {
+              _handleBack(context);
+            }
+          },
+          child: Scaffold(
+            backgroundColor: AppColors.background,
+            body: body,
+          ),
         );
       },
     );
@@ -265,6 +301,61 @@ class _QuestionScreen extends StatelessWidget {
                       isCorrect: isCorrect,
                       isSubmitting: isSubmitting,
                       attemptNo: attemptNo,
+                      onSpeakTts: () {
+                        getIt<TtsService>().speak(question.question);
+                      },
+                      onHelp: () {
+                        bloc.add(const ActivityHelpRequested());
+                        showModalBottomSheet<void>(
+                          context: context,
+                          backgroundColor: AppColors.surface,
+                          shape: const RoundedRectangleBorder(
+                            borderRadius:
+                                BorderRadius.vertical(top: Radius.circular(24)),
+                          ),
+                          builder: (ctx) => Padding(
+                            padding: const EdgeInsets.all(AppSpacing.xxl),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Text('💡',
+                                    style: TextStyle(fontSize: 48)),
+                                const SizedBox(height: AppSpacing.md),
+                                Text(
+                                  'تلميح ومساعدة',
+                                  style: Theme.of(ctx)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                        color: AppColors.primary,
+                                      ),
+                                ),
+                                const SizedBox(height: AppSpacing.md),
+                                Text(
+                                  'خذ وقتك وفكر بهدوء في السؤال. جرب الخيار الذي يبدو لك أقرب للإجابة! 🌟',
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(ctx)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: AppColors.textPrimary,
+                                      ),
+                                ),
+                                const SizedBox(height: AppSpacing.xl),
+                                SizedBox(
+                                  width: double.infinity,
+                                  height: 52,
+                                  child: ElevatedButton(
+                                    onPressed: () => Navigator.of(ctx).pop(),
+                                    child: const Text('فهمت، شكراً!'),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
                       onOptionSelected: (answer) {
                         if (!isSubmitting && !showFeedback) {
                           bloc.add(ActivityAnswerSelected(answer));
@@ -347,8 +438,8 @@ class _ErrorView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('😔', style: TextStyle(fontSize: 64),
-              textAlign: TextAlign.center),
+          const Text('😔',
+              style: TextStyle(fontSize: 64), textAlign: TextAlign.center),
           const SizedBox(height: AppSpacing.xl),
           Text(
             message,

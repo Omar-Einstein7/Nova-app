@@ -98,8 +98,16 @@ class _InterestChips extends StatelessWidget {
 
   // Pre-defined interests [PLACEHOLDER: move to l10n if multilingual support added]
   static const _defaults = [
-    'حيوانات', 'سيارات', 'فضاء', 'ألوان', 'كرة القدم',
-    'ديناصورات', 'موسيقى', 'رسم', 'قطارات', 'بحر',
+    'حيوانات',
+    'سيارات',
+    'فضاء',
+    'ألوان',
+    'كرة القدم',
+    'ديناصورات',
+    'موسيقى',
+    'رسم',
+    'قطارات',
+    'بحر',
   ];
 
   @override
@@ -124,8 +132,7 @@ class _InterestChips extends StatelessWidget {
           checkmarkColor: AppColors.primary,
           labelStyle: AppTextStyles.bodySmall.copyWith(
             color: isSelected ? AppColors.primary : AppColors.textPrimary,
-            fontWeight:
-                isSelected ? FontWeight.w600 : FontWeight.normal,
+            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
@@ -239,9 +246,8 @@ class _StyleCard extends StatelessWidget {
                 height: 48,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: isSelected
-                      ? AppColors.primary
-                      : AppColors.surfaceVariant,
+                  color:
+                      isSelected ? AppColors.primary : AppColors.surfaceVariant,
                 ),
                 child: Icon(icon,
                     color: isSelected ? Colors.white : AppColors.textSecondary,

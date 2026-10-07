@@ -57,7 +57,8 @@ class AuthRemoteDataSource {
     try {
       final response = await _dio.get(ApiEndpoints.me);
       final body = response.data as Map<String, dynamic>;
-      return ApiResponse.parse(body, (d) => UserModel.fromJson(d as Map<String, dynamic>));
+      return ApiResponse.parse(
+          body, (d) => UserModel.fromJson(d as Map<String, dynamic>));
     } on DioException catch (e) {
       return Left(_mapDio(e));
     } catch (e) {
@@ -69,7 +70,8 @@ class AuthRemoteDataSource {
     try {
       final response = await _dio.patch(ApiEndpoints.me, data: {'name': name});
       final body = response.data as Map<String, dynamic>;
-      return ApiResponse.parse(body, (d) => UserModel.fromJson(d as Map<String, dynamic>));
+      return ApiResponse.parse(
+          body, (d) => UserModel.fromJson(d as Map<String, dynamic>));
     } on DioException catch (e) {
       return Left(_mapDio(e));
     } catch (e) {
@@ -100,8 +102,8 @@ class AuthRemoteDataSource {
       return ApiResponse.parse(body, (d) {
         final data = d as Map<String, dynamic>;
         final user = UserModel.fromJson(data['user'] as Map<String, dynamic>);
-        final tokens = TokensModel.fromJson(
-            data['tokens'] as Map<String, dynamic>);
+        final tokens =
+            TokensModel.fromJson(data['tokens'] as Map<String, dynamic>);
         return (user, tokens);
       });
     } on DioException catch (e) {
@@ -127,7 +129,8 @@ class AuthRemoteDataSource {
       final err = body['error'] as Map<String, dynamic>?;
       final code = err?['code'] as String? ?? 'UNKNOWN';
       final message = err?['message'] as String? ?? 'خطأ في الخادم';
-      if (code == 'VALIDATION_ERROR') return Failure.validation(details: err?['details']);
+      if (code == 'VALIDATION_ERROR')
+        return Failure.validation(details: err?['details']);
       return Failure.server(code: code, message: message);
     }
     return Failure.unknown(message: e.message);

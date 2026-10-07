@@ -106,8 +106,7 @@ class _OnboardingViewState extends State<_OnboardingView> {
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
                   child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 8, right: 16, left: 16),
+                    padding: const EdgeInsets.only(top: 8, right: 16, left: 16),
                     child: AnimatedOpacity(
                       opacity: isLast ? 0.0 : 1.0,
                       duration: const Duration(milliseconds: 200),

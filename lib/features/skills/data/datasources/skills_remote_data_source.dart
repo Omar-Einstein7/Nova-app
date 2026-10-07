@@ -13,10 +13,8 @@ class SkillsRemoteDataSource {
     try {
       final response = await _dio.get<Map<String, dynamic>>('/skills');
       final data = response.data!['data'] as List<dynamic>;
-      final skills = data
-          .cast<Map<String, dynamic>>()
-          .map(SkillModel.fromJson)
-          .toList();
+      final skills =
+          data.cast<Map<String, dynamic>>().map(SkillModel.fromJson).toList();
       return Right(skills);
     } on DioException catch (e) {
       return Left(ErrorMapper.fromDioException(e));

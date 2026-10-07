@@ -20,7 +20,7 @@ final class AppTheme {
       onSecondary: AppColors.textOnPrimary,
       secondaryContainer: const Color(0xFFEDE7F6),
       onSecondaryContainer: AppColors.secondary,
-      error: AppColors.gentleRetry,   // calmer than standard red
+      error: AppColors.gentleRetry, // calmer than standard red
       onError: AppColors.textOnPrimary,
       errorContainer: const Color(0xFFFFF3E0),
       onErrorContainer: AppColors.gentleRetry,

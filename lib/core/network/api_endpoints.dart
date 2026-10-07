@@ -1,4 +1,4 @@
-﻿/// All API path constants.
+/// All API path constants.
 abstract final class ApiEndpoints {
   // Auth
   static const String register = "/auth/register";
@@ -19,12 +19,10 @@ abstract final class ApiEndpoints {
       "/children/$childId/activities/generate";
   static String childRecommendation(String childId) =>
       "/children/$childId/recommendations/next";
-  static String childProgress(String childId) =>
-      "/children/$childId/progress";
+  static String childProgress(String childId) => "/children/$childId/progress";
   static String childSkillProgress(String childId, String skillId) =>
       "/children/$childId/progress/skills/$skillId";
-  static String childSessions(String childId) =>
-      "/children/$childId/sessions";
+  static String childSessions(String childId) => "/children/$childId/sessions";
 
   // Activities & sessions
   static String createSession(String activityId) =>

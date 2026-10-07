@@ -1,10 +1,15 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../network/auth_interceptor.dart';
 import '../network/dio_client.dart';
+import '../network/environment.dart';
+import '../services/crash_reporter.dart';
+import '../services/logger.dart';
+import '../services/tts_service.dart';
 import '../storage/prefs.dart';
 import '../storage/secure_storage.dart';
 import '../../features/auth/data/datasources/auth_remote_data_source.dart';
@@ -41,12 +46,22 @@ import '../../features/progress/data/repositories/progress_repository_impl.dart'
 import '../../features/progress/domain/repositories/progress_repository.dart';
 import '../../features/progress/domain/usecases/progress_use_cases.dart';
 import '../../features/progress/presentation/cubit/progress_cubit.dart';
-import '../../features/progress/presentation/cubit/sessions_history_cubit.dart';
 import '../../features/settings/presentation/cubit/settings_cubit.dart';
 
 final GetIt getIt = GetIt.instance;
 
 Future<void> configureDependencies() async {
+  // ── Services & Crash Reporting ───────────────────────────────────────────
+  // [PLACEHOLDER: In production, swap with Sentry or FirebaseCrashlytics]
+  final CrashReporter crashReporter =
+      kDebugMode ? const ConsoleCrashReporter() : const NoOpCrashReporter();
+  await crashReporter.initialize();
+  getIt.registerSingleton<CrashReporter>(crashReporter);
+  AppLogger.setCrashReporter(crashReporter);
+
+  final TtsService ttsService = FlutterTtsService();
+  getIt.registerSingleton<TtsService>(ttsService);
+
   // ── External ─────────────────────────────────────────────────────────────
   final prefs = await SharedPreferences.getInstance();
   getIt.registerSingleton<SharedPreferences>(prefs);
@@ -61,11 +76,8 @@ Future<void> configureDependencies() async {
   getIt.registerSingleton<Prefs>(Prefs(getIt<SharedPreferences>()));
 
   // ── Network ──────────────────────────────────────────────────────────────
-  // [PLACEHOLDER: BASE_URL must be supplied via --dart-define=BASE_URL=https://...]
-  const baseUrl = String.fromEnvironment(
-    'http://192.168.1.6:3000/api/v1',
-    defaultValue: 'http://192.168.1.6:3000/api/v1',
-  );
+  // Configured from --dart-define=BASE_URL=... and AppConfig
+  final baseUrl = AppConfig.baseUrl;
 
   final refreshDio = DioClient.createRefreshDio();
 
@@ -92,9 +104,7 @@ Future<void> configureDependencies() async {
 }
 
 /// Register auth feature dependencies.
-/// Called from [configureDependencies] and can also be called in tests.
 void registerAuthFeature(GetIt sl) {
-  // Data
   sl.registerLazySingleton<AuthRemoteDataSource>(
     () => AuthRemoteDataSource(sl<Dio>()),
   );
@@ -104,8 +114,6 @@ void registerAuthFeature(GetIt sl) {
       secureStorage: sl<SecureStorage>(),
     ),
   );
-  // Register as both the domain interface and the concrete type.
-  // GoRouter / AuthInterceptor need the concrete TokenProvider methods.
   sl.registerLazySingleton<AuthRepository>(
     () => sl<AuthRepositoryImpl>(),
   );
@@ -130,7 +138,6 @@ void registerAuthFeature(GetIt sl) {
 
 /// Register skills feature dependencies.
 void registerSkillsFeature(GetIt sl) {
-  // Data
   sl.registerLazySingleton<SkillsRemoteDataSource>(
     () => SkillsRemoteDataSource(sl<Dio>()),
   );
@@ -141,10 +148,8 @@ void registerSkillsFeature(GetIt sl) {
     () => sl<SkillsRepositoryImpl>(),
   );
 
-  // Domain
   sl.registerLazySingleton(() => GetSkillsUseCase(sl<SkillsRepository>()));
 
-  // Presentation — cached for session
   sl.registerLazySingleton<SkillsCubit>(
     () => SkillsCubit(getSkillsUseCase: sl<GetSkillsUseCase>()),
   );
@@ -152,25 +157,23 @@ void registerSkillsFeature(GetIt sl) {
 
 /// Register children feature dependencies.
 void registerChildrenFeature(GetIt sl) {
-  // Data
   sl.registerLazySingleton<ChildrenRemoteDataSource>(
     () => ChildrenRemoteDataSource(sl<Dio>()),
   );
   sl.registerLazySingleton<ChildrenRepositoryImpl>(
-    () => ChildrenRepositoryImpl(remoteDataSource: sl<ChildrenRemoteDataSource>()),
+    () => ChildrenRepositoryImpl(
+        remoteDataSource: sl<ChildrenRemoteDataSource>()),
   );
   sl.registerLazySingleton<ChildrenRepository>(
     () => sl<ChildrenRepositoryImpl>(),
   );
 
-  // Domain use cases
   sl.registerLazySingleton(() => GetChildrenUseCase(sl<ChildrenRepository>()));
   sl.registerLazySingleton(() => GetChildUseCase(sl<ChildrenRepository>()));
   sl.registerLazySingleton(() => CreateChildUseCase(sl<ChildrenRepository>()));
   sl.registerLazySingleton(() => UpdateChildUseCase(sl<ChildrenRepository>()));
   sl.registerLazySingleton(() => DeleteChildUseCase(sl<ChildrenRepository>()));
 
-  // Presentation
   sl.registerFactory<ChildrenListCubit>(
     () => ChildrenListCubit(
       getChildren: sl<GetChildrenUseCase>(),
@@ -192,7 +195,6 @@ void registerChildrenFeature(GetIt sl) {
 
 /// Register activity feature dependencies.
 void registerActivityFeature(GetIt sl) {
-  // Data
   sl.registerLazySingleton<ActivityRemoteDataSource>(
     () => ActivityRemoteDataSource(sl<Dio>()),
   );
@@ -206,13 +208,13 @@ void registerActivityFeature(GetIt sl) {
     ),
   );
 
-  // Domain
-  sl.registerLazySingleton(() => GenerateActivityUseCase(sl<ActivityRepository>()));
+  sl.registerLazySingleton(
+      () => GenerateActivityUseCase(sl<ActivityRepository>()));
   sl.registerLazySingleton(() => StartSessionUseCase(sl<ActivityRepository>()));
   sl.registerLazySingleton(() => SubmitAnswerUseCase(sl<ActivityRepository>()));
-  sl.registerLazySingleton(() => CompleteSessionUseCase(sl<ActivityRepository>()));
+  sl.registerLazySingleton(
+      () => CompleteSessionUseCase(sl<ActivityRepository>()));
 
-  // Presentation — factory so each page gets a fresh Bloc
   sl.registerFactory<ActivityPlayerBloc>(
     () => ActivityPlayerBloc(
       generateActivity: sl<GenerateActivityUseCase>(),
@@ -225,23 +227,23 @@ void registerActivityFeature(GetIt sl) {
 
 /// Register progress feature dependencies.
 void registerProgressFeature(GetIt sl) {
-  // Data
   sl.registerLazySingleton<ProgressRemoteDataSource>(
     () => ProgressRemoteDataSource(sl<Dio>()),
   );
   sl.registerLazySingleton<ProgressRepositoryImpl>(
-    () => ProgressRepositoryImpl(remoteDataSource: sl<ProgressRemoteDataSource>()),
+    () => ProgressRepositoryImpl(
+        remoteDataSource: sl<ProgressRemoteDataSource>()),
   );
   sl.registerLazySingleton<ProgressRepository>(
     () => sl<ProgressRepositoryImpl>(),
   );
 
-  // Domain
-  sl.registerLazySingleton(() => GetProgressOverviewUseCase(sl<ProgressRepository>()));
-  sl.registerLazySingleton(() => GetSkillChartUseCase(sl<ProgressRepository>()));
+  sl.registerLazySingleton(
+      () => GetProgressOverviewUseCase(sl<ProgressRepository>()));
+  sl.registerLazySingleton(
+      () => GetSkillChartUseCase(sl<ProgressRepository>()));
   sl.registerLazySingleton(() => GetSessionsUseCase(sl<ProgressRepository>()));
 
-  // Presentation
   sl.registerLazySingleton<ProgressCubitFactory>(
     () => ProgressCubitFactory(getOverview: sl<GetProgressOverviewUseCase>()),
   );

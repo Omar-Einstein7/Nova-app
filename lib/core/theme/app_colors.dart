@@ -1,4 +1,4 @@
-﻿import "package:flutter/material.dart";
+import "package:flutter/material.dart";
 
 /// NOVA design-token colours.
 /// All values marked [PLACEHOLDER] must be reviewed with the designer.
@@ -26,8 +26,9 @@ abstract final class AppColors {
 
   // ── Text ─────────────────────────────────────────────────────────────────
   static const Color textPrimary = Color(0xFF212121);
-  static const Color textSecondary = Color(0xFF757575);
-  static const Color textDisabled = Color(0xFFBDBDBD);
+  static const Color textSecondary =
+      Color(0xFF595959); // Contrast > 5.8:1 on surface, > 4.8:1 on tinted cards
+  static const Color textDisabled = Color(0xFF9E9E9E);
   static const Color textOnPrimary = Color(0xFFFFFFFF);
 
   // ── Borders / Dividers ───────────────────────────────────────────────────

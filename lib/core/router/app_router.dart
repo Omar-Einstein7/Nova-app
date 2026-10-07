@@ -147,6 +147,14 @@ GoRouter buildRouter({
           ),
         ],
       ),
+      GoRoute(
+        path: '/play',
+        name: 'play',
+        builder: (_, state) => ActivityPage(
+          extra: state.extra as Map<String, dynamic>? ??
+              {'childId': state.uri.queryParameters['childId'] ?? ''},
+        ),
+      ),
     ],
     errorBuilder: (_, state) => _ErrorPage(error: state.error),
   );
@@ -157,8 +165,29 @@ GoRouter buildRouter({
 class _ErrorPage extends StatelessWidget {
   const _ErrorPage({required this.error});
   final Exception? error;
+
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Center(child: Text('Error: ${error?.toString()}')),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text('🔍', style: TextStyle(fontSize: 48)),
+                const SizedBox(height: 16),
+                const Text(
+                  'الصفحة غير موجودة',
+                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.go('/home'),
+                  child: const Text('العودة للرئيسية'),
+                ),
+              ],
+            ),
+          ),
+        ),
       );
 }

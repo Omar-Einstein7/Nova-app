@@ -35,8 +35,8 @@ class ChildFormPage extends StatelessWidget {
           create: (_) => getIt<SkillsCubit>()..load(),
         ),
         BlocProvider<ChildrenListCubit>(
-      create: (_) => getIt<ChildrenListCubit>(),
-    ),
+          create: (_) => getIt<ChildrenListCubit>(),
+        ),
       ],
       child: _ChildFormView(isEdit: existing != null),
     );
@@ -82,8 +82,8 @@ class _ChildFormViewState extends State<_ChildFormView> {
               _StepIndicator(currentStep: state.currentStep),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 20, vertical: 24),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
                   child: _buildCurrentStep(context, state),
                 ),
               ),

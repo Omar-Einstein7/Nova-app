@@ -64,7 +64,8 @@ class ChildCard extends StatelessWidget {
               // Overflow menu
               PopupMenuButton<_CardAction>(
                 key: Key('child_card_menu_${child.id}'),
-                icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
+                icon:
+                    const Icon(Icons.more_vert, color: AppColors.textSecondary),
                 onSelected: (action) {
                   if (action == _CardAction.edit) onEdit();
                   if (action == _CardAction.delete) onDelete();
@@ -100,8 +101,18 @@ class _AvatarWidget extends StatelessWidget {
   final String name;
 
   static const List<String> _emojis = [
-    '🐱', '🐶', '🦊', '🐼', '🦁', '🐸', '🦋', '🐧',
-    '🐨', '🦄', '🐰', '🐻',
+    '🐱',
+    '🐶',
+    '🦊',
+    '🐼',
+    '🦁',
+    '🐸',
+    '🦋',
+    '🐧',
+    '🐨',
+    '🦄',
+    '🐰',
+    '🐻',
   ];
 
   @override
@@ -109,7 +120,9 @@ class _AvatarWidget extends StatelessWidget {
     // Map avatar key to an emoji for now [PLACEHOLDER: swap with Image.asset]
     final emoji = avatar != null && int.tryParse(avatar!) != null
         ? _emojis[int.parse(avatar!) % _emojis.length]
-        : (name.isNotEmpty ? _emojis[name.codeUnitAt(0) % _emojis.length] : '🌟');
+        : (name.isNotEmpty
+            ? _emojis[name.codeUnitAt(0) % _emojis.length]
+            : '🌟');
 
     return Container(
       width: 52,

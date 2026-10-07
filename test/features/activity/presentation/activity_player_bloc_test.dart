@@ -224,8 +224,7 @@ void main() {
       act: (bloc) => bloc.add(const ActivityNextQuestion()),
       expect: () => [
         isA<ActivityPlayerCompleting>(),
-        isA<ActivityPlayerResult>()
-            .having((s) => s.result.stars, 'stars', 3),
+        isA<ActivityPlayerResult>().having((s) => s.result.stars, 'stars', 3),
       ],
     );
 

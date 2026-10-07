@@ -60,3 +60,8 @@ class ActivityExitRequested extends ActivityPlayerEvent {
 class ActivityRetryCurrentQuestion extends ActivityPlayerEvent {
   const ActivityRetryCurrentQuestion();
 }
+
+/// Child requested help or hint on the current question.
+class ActivityHelpRequested extends ActivityPlayerEvent {
+  const ActivityHelpRequested();
+}

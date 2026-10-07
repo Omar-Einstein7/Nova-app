@@ -3,13 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
-import '../../../../core/error/failures.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/utils/nova_motion.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
-import '../../../../core/widgets/parent_gate_dialog.dart';
 import '../../domain/entities/progress_entities.dart';
 import '../../domain/usecases/progress_use_cases.dart';
 import '../cubit/progress_cubit.dart';
@@ -25,15 +24,14 @@ class ProgressPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (_) => getIt<ProgressCubitFactory>().create(childId)
-            ..load(range: '7d'),
+          create: (_) =>
+              getIt<ProgressCubitFactory>().create(childId)..load(range: '7d'),
         ),
         BlocProvider(
-          create: (_) =>
-              SessionsHistoryCubit(
-                childId: childId,
-                getSessions: getIt<GetSessionsUseCase>(),
-              )..load(),
+          create: (_) => SessionsHistoryCubit(
+            childId: childId,
+            getSessions: getIt<GetSessionsUseCase>(),
+          )..load(),
         ),
       ],
       child: _ProgressView(childId: childId),
@@ -105,14 +103,12 @@ class _ProgressViewState extends State<_ProgressView> {
           if (state is ProgressError) {
             return ErrorView(
               message: state.message,
-              onRetry: () =>
-                  context.read<ProgressCubit>().load(range: _range),
+              onRetry: () => context.read<ProgressCubit>().load(range: _range),
             );
           }
           if (state is ProgressEmpty) {
             return _EmptyProgressView(
-              onRetry: () =>
-                  context.read<ProgressCubit>().load(range: _range),
+              onRetry: () => context.read<ProgressCubit>().load(range: _range),
             );
           }
           if (state is ProgressLoaded) {
@@ -125,12 +121,10 @@ class _ProgressViewState extends State<_ProgressView> {
   }
 
   Widget _buildContent(BuildContext context, ProgressOverview overview) {
-    final reduceMotion =
-        MediaQuery.of(context).disableAnimations;
+    final reduceMotion = NovaMotion.shouldReduceMotion(context);
     return RefreshIndicator(
       color: AppColors.primary,
-      onRefresh: () =>
-          context.read<ProgressCubit>().load(range: _range),
+      onRefresh: () => context.read<ProgressCubit>().load(range: _range),
       child: ListView(
         padding: const EdgeInsetsDirectional.symmetric(
           horizontal: AppSpacing.lg,
@@ -352,7 +346,7 @@ class _StatCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: color.withOpacity(0.08),
+            color: color.withValues(alpha: 0.08),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -461,7 +455,7 @@ class _ChartCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.06),
+              color: AppColors.primary.withValues(alpha: 0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -470,9 +464,8 @@ class _ChartCard extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(8, 16, 16, 8),
         child: LineChart(
           _buildLineChartData(),
-          duration: reduceMotion
-              ? Duration.zero
-              : const Duration(milliseconds: 400),
+          duration:
+              reduceMotion ? Duration.zero : const Duration(milliseconds: 400),
         ),
       ),
     );
@@ -527,7 +520,7 @@ class _ChartCard extends StatelessWidget {
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: AppColors.primary.withOpacity(0.08),
+            color: AppColors.primary.withValues(alpha: 0.08),
           ),
         ),
       ],
@@ -572,7 +565,7 @@ class _SkillProgressTile extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.surface,
           borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border.withOpacity(0.5)),
+          border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -591,7 +584,7 @@ class _SkillProgressTile extends StatelessWidget {
                     vertical: 3,
                   ),
                   decoration: BoxDecoration(
-                    color: levelColor.withOpacity(0.12),
+                    color: levelColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
@@ -712,7 +705,7 @@ class _SessionTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surface,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withOpacity(0.5)),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [
@@ -751,7 +744,7 @@ class _SessionTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: AppColors.success.withOpacity(0.1),
+              color: AppColors.success.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
@@ -828,7 +821,7 @@ class _DisclaimerFooter extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.surfaceVariant,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withOpacity(0.5)),
+        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
       ),
       child: Row(
         children: [

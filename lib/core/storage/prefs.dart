@@ -1,4 +1,4 @@
-﻿import "package:shared_preferences/shared_preferences.dart";
+import "package:shared_preferences/shared_preferences.dart";
 
 /// App-wide user preferences (non-sensitive).
 class Prefs {
@@ -13,8 +13,7 @@ class Prefs {
   static const _kFontScale = "nova.font_scale";
 
   bool get onboardingSeen => _prefs.getBool(_kOnboardingSeen) ?? false;
-  Future<void> setOnboardingSeen(bool v) =>
-      _prefs.setBool(_kOnboardingSeen, v);
+  Future<void> setOnboardingSeen(bool v) => _prefs.setBool(_kOnboardingSeen, v);
 
   bool get soundOn => _prefs.getBool(_kSoundOn) ?? true;
   Future<void> setSoundOn(bool v) => _prefs.setBool(_kSoundOn, v);
@@ -29,4 +28,3 @@ class Prefs {
   double get fontScale => _prefs.getDouble(_kFontScale) ?? 1.0;
   Future<void> setFontScale(double v) => _prefs.setDouble(_kFontScale, v);
 }
-

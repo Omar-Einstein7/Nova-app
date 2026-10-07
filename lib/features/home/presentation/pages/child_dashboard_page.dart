@@ -54,8 +54,8 @@ class _DashboardView extends StatelessWidget {
                 pinned: true,
                 backgroundColor: AppColors.primary,
                 leading: IconButton(
-                  icon: const Icon(Icons.arrow_back_ios_new,
-                      color: Colors.white),
+                  icon:
+                      const Icon(Icons.arrow_back_ios_new, color: Colors.white),
                   onPressed: () => context.pop(),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
@@ -146,8 +146,8 @@ class _DashboardHeader extends StatelessWidget {
                     .copyWith(color: Colors.white, fontSize: 22)),
             if (age != null)
               Text(l.childAgeLabel(age),
-                  style: AppTextStyles.bodySmall
-                      .copyWith(color: Colors.white70)),
+                  style:
+                      AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
           ],
         ),
       ),
@@ -161,15 +161,27 @@ class _AvatarCircle extends StatelessWidget {
   final String name;
 
   static const _emojis = [
-    '🐱', '🐶', '🦊', '🐼', '🦁', '🐸', '🦋', '🐧',
-    '🐨', '🦄', '🐰', '🐻',
+    '🐱',
+    '🐶',
+    '🦊',
+    '🐼',
+    '🦁',
+    '🐸',
+    '🦋',
+    '🐧',
+    '🐨',
+    '🦄',
+    '🐰',
+    '🐻',
   ];
 
   @override
   Widget build(BuildContext context) {
     final emoji = avatar != null && int.tryParse(avatar!) != null
         ? _emojis[int.parse(avatar!) % _emojis.length]
-        : (name.isNotEmpty ? _emojis[name.codeUnitAt(0) % _emojis.length] : '🌟');
+        : (name.isNotEmpty
+            ? _emojis[name.codeUnitAt(0) % _emojis.length]
+            : '🌟');
 
     return Container(
       width: 80,
@@ -304,8 +316,7 @@ class _RecommendationCard extends StatelessWidget {
                   }
                 },
                 child: Text(l.chooseSkill,
-                    style:
-                        const TextStyle(color: AppColors.secondary)),
+                    style: const TextStyle(color: AppColors.secondary)),
               ),
             ],
           ),
@@ -318,8 +329,7 @@ class _RecommendationCard extends StatelessWidget {
           if (suggestBreak) ...[
             const SizedBox(height: 8),
             Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
               decoration: BoxDecoration(
                 color: AppColors.starFilled.withValues(alpha: 0.2),
                 borderRadius: BorderRadius.circular(8),
@@ -390,7 +400,8 @@ class _QuickStatsRow extends StatelessWidget {
           child: _StatChip(
             key: const Key('stat_success'),
             icon: Icons.emoji_events_outlined,
-            value: '${((progress['avgSuccessRate'] as num? ?? 0) * 100).round()}%',
+            value:
+                '${((progress['avgSuccessRate'] as num? ?? 0) * 100).round()}%',
             label: l.statSuccess,
           ),
         ),

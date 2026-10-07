@@ -1,4 +1,4 @@
-﻿// This file intentionally left minimal.
+// This file intentionally left minimal.
 // Feature tests are in their own directories (test/core/...).
 import "package:flutter_test/flutter_test.dart";
 

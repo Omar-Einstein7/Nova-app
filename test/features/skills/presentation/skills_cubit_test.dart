@@ -45,7 +45,8 @@ void main() {
     blocTest<SkillsCubit, SkillsState>(
       'emits [loading, loaded] when getSkills succeeds',
       setUp: () {
-        when(() => mockGetSkills()).thenAnswer((_) async => const Right(_tSkills));
+        when(() => mockGetSkills())
+            .thenAnswer((_) async => const Right(_tSkills));
       },
       build: buildCubit,
       act: (c) => c.load(),
@@ -59,7 +60,8 @@ void main() {
     blocTest<SkillsCubit, SkillsState>(
       'does NOT refetch if already loaded and forceRefresh is false',
       setUp: () {
-        when(() => mockGetSkills()).thenAnswer((_) async => const Right(_tSkills));
+        when(() => mockGetSkills())
+            .thenAnswer((_) async => const Right(_tSkills));
       },
       build: buildCubit,
       seed: () => const SkillsState.loaded(_tSkills),
@@ -71,7 +73,8 @@ void main() {
     blocTest<SkillsCubit, SkillsState>(
       'refetches if forceRefresh is true',
       setUp: () {
-        when(() => mockGetSkills()).thenAnswer((_) async => const Right(_tSkills));
+        when(() => mockGetSkills())
+            .thenAnswer((_) async => const Right(_tSkills));
       },
       build: buildCubit,
       seed: () => const SkillsState.loaded(_tSkills),

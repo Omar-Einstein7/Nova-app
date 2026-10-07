@@ -73,7 +73,8 @@ void main() {
       expect(cubit.validateStep1(), false);
 
       // Age >= 3
-      cubit.setBirthDate(DateTime.now().subtract(const Duration(days: 365 * 5)));
+      cubit
+          .setBirthDate(DateTime.now().subtract(const Duration(days: 365 * 5)));
       expect(cubit.validateStep1(), true);
     });
 

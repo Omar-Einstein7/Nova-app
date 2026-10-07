@@ -4,7 +4,9 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../domain/entities/activity.dart';
 
 /// Renders one question with its 3 selectable options.
-/// Options are full-width cards with large tap targets (≥ 64dp).
+/// Options are full-width cards with large touch targets (≥ 64dp).
+/// Supports text scale up to 1.5 without overflow.
+/// Includes Semantics labels, TTS button, and gentle Help button.
 class QuestionView extends StatelessWidget {
   const QuestionView({
     super.key,
@@ -15,6 +17,8 @@ class QuestionView extends StatelessWidget {
     this.isCorrect,
     this.isSubmitting = false,
     this.attemptNo = 0,
+    this.onSpeakTts,
+    this.onHelp,
   });
 
   final Question question;
@@ -23,9 +27,9 @@ class QuestionView extends StatelessWidget {
   final String? selectedAnswer;
   final bool? isCorrect;
   final bool isSubmitting;
-
-  /// Current attempt count (0 = first attempt, 1 = second, 2 = third).
   final int attemptNo;
+  final VoidCallback? onSpeakTts;
+  final VoidCallback? onHelp;
 
   bool get _hasResult => isCorrect != null;
 
@@ -34,7 +38,7 @@ class QuestionView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        // Progress: question N of total (no numeric timer)
+        // Progress: question N of total
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: Row(
@@ -46,21 +50,24 @@ class QuestionView extends StatelessWidget {
                     ),
               ),
               const Spacer(),
-              // Attempt dots
+              // Attempt indicator
               if (attemptNo > 0)
-                Row(
-                  children: List.generate(
-                    3,
-                    (i) => Padding(
-                      padding: const EdgeInsetsDirectional.only(start: 4),
-                      child: Container(
-                        width: 10,
-                        height: 10,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: i < attemptNo
-                              ? AppColors.gentleRetry
-                              : AppColors.divider,
+                Semantics(
+                  label: 'المحاولة رقم $attemptNo من 3',
+                  child: Row(
+                    children: List.generate(
+                      3,
+                      (i) => Padding(
+                        padding: const EdgeInsetsDirectional.only(start: 4),
+                        child: Container(
+                          width: 10,
+                          height: 10,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: i < attemptNo
+                                ? AppColors.gentleRetry
+                                : AppColors.divider,
+                          ),
                         ),
                       ),
                     ),
@@ -71,7 +78,7 @@ class QuestionView extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
 
-        // Thin progress bar
+        // Progress bar
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
           child: ClipRRect(
@@ -84,7 +91,40 @@ class QuestionView extends StatelessWidget {
             ),
           ),
         ),
-        const SizedBox(height: AppSpacing.xxl),
+        const SizedBox(height: AppSpacing.lg),
+
+        // Assistive controls bar (TTS & Help)
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              if (onSpeakTts != null)
+                Semantics(
+                  button: true,
+                  label: 'استمع إلى نص السؤال صوتياً',
+                  child: IconButton.filledTonal(
+                    onPressed: onSpeakTts,
+                    icon: const Icon(Icons.volume_up_rounded),
+                    tooltip: 'استمع للسؤال',
+                  ),
+                ),
+              if (onHelp != null) ...[
+                const SizedBox(width: AppSpacing.sm),
+                Semantics(
+                  button: true,
+                  label: 'طلب مساعدة وتلميح',
+                  child: IconButton.filledTonal(
+                    onPressed: onHelp,
+                    icon: const Icon(Icons.lightbulb_outline_rounded),
+                    tooltip: 'مساعدة',
+                  ),
+                ),
+              ],
+            ],
+          ),
+        ),
+        const SizedBox(height: AppSpacing.md),
 
         // Emoji
         Text(
@@ -155,53 +195,75 @@ class _OptionCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final semanticHint = isSelected
+        ? (isCorrect == true ? 'إجابة صحيحة' : 'محاولة أخرى')
+        : 'اضغط لاختيار هذا الجواب';
+
     return Padding(
       padding: const EdgeInsets.symmetric(
-          horizontal: AppSpacing.xl, vertical: AppSpacing.sm),
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        decoration: BoxDecoration(
-          color: _cardColor(),
-          border: Border.all(color: _borderColor(), width: isSelected ? 2 : 1),
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: isSelected
-              ? [
-                  BoxShadow(
-                    color: AppColors.primary.withValues(alpha: 0.12),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ]
-              : [],
-        ),
-        child: InkWell(
-          onTap: isDisabled ? null : onTap,
-          borderRadius: BorderRadius.circular(16),
-          child: Padding(
-            padding: const EdgeInsets.all(AppSpacing.lg),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    label,
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textPrimary,
-                          fontWeight: isSelected
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+        horizontal: AppSpacing.xl,
+        vertical: AppSpacing.sm,
+      ),
+      child: Semantics(
+        button: true,
+        enabled: !isDisabled,
+        selected: isSelected,
+        label: 'الخيار: $label',
+        hint: semanticHint,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          decoration: BoxDecoration(
+            color: _cardColor(),
+            border:
+                Border.all(color: _borderColor(), width: isSelected ? 2 : 1),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: isSelected
+                ? [
+                    BoxShadow(
+                      color: AppColors.primary.withValues(alpha: 0.12),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ]
+                : [],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: isDisabled ? null : onTap,
+              borderRadius: BorderRadius.circular(16),
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(minHeight: 64),
+                child: Padding(
+                  padding: const EdgeInsets.all(AppSpacing.lg),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: Text(
+                          label,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: AppColors.textPrimary,
+                                    fontWeight: isSelected
+                                        ? FontWeight.bold
+                                        : FontWeight.normal,
+                                  ),
+                          textAlign: TextAlign.center,
                         ),
-                    textAlign: TextAlign.center,
+                      ),
+                      if (isSelected && isCorrect != null)
+                        Padding(
+                          padding: const EdgeInsetsDirectional.only(
+                              start: AppSpacing.sm),
+                          child: Text(
+                            isCorrect! ? '✅' : '💙',
+                            style: const TextStyle(fontSize: 20),
+                          ),
+                        ),
+                    ],
                   ),
                 ),
-                if (isSelected && isCorrect != null)
-                  Padding(
-                    padding: const EdgeInsetsDirectional.only(start: AppSpacing.sm),
-                    child: Text(
-                      isCorrect! ? '✅' : '💙',
-                      style: const TextStyle(fontSize: 20),
-                    ),
-                  ),
-              ],
+              ),
             ),
           ),
         ),

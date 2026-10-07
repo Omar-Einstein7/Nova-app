@@ -48,7 +48,8 @@ class _HomeView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.primary,
         elevation: 0,
-        title: Text(l.homeTitle, style: AppTextStyles.titleLarge.copyWith(color: Colors.white)),
+        title: Text(l.homeTitle,
+            style: AppTextStyles.titleLarge.copyWith(color: Colors.white)),
         centerTitle: false,
         actions: [
           IconButton(
@@ -79,12 +80,10 @@ class _HomeView extends StatelessWidget {
           };
         },
       ),
-      floatingActionButton:
-          BlocBuilder<ChildrenListCubit, ChildrenListState>(
+      floatingActionButton: BlocBuilder<ChildrenListCubit, ChildrenListState>(
         builder: (context, state) {
-          final count = state is ChildrenListStateLoaded
-              ? state.children.length
-              : 0;
+          final count =
+              state is ChildrenListStateLoaded ? state.children.length : 0;
           if (count >= 5) return const SizedBox.shrink();
           return FloatingActionButton.extended(
             key: const Key('home_add_child_fab'),

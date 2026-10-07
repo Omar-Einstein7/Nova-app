@@ -1,4 +1,4 @@
-﻿import "package:flutter_secure_storage/flutter_secure_storage.dart";
+import "package:flutter_secure_storage/flutter_secure_storage.dart";
 
 /// Thin wrapper around FlutterSecureStorage for auth tokens.
 /// Keys must NOT be logged anywhere.
@@ -26,4 +26,3 @@ class SecureStorage {
     await _storage.delete(key: _kRefreshToken);
   }
 }
-

@@ -234,14 +234,12 @@ void main() {
 
   group('TokenProvider (delegation to SecureStorage)', () {
     test('getAccessToken delegates to storage', () async {
-      when(() => storage.getAccessToken())
-          .thenAnswer((_) async => 'tok');
+      when(() => storage.getAccessToken()).thenAnswer((_) async => 'tok');
       expect(await repo.getAccessToken(), 'tok');
     });
 
     test('getRefreshToken delegates to storage', () async {
-      when(() => storage.getRefreshToken())
-          .thenAnswer((_) async => 'rtok');
+      when(() => storage.getRefreshToken()).thenAnswer((_) async => 'rtok');
       expect(await repo.getRefreshToken(), 'rtok');
     });
 

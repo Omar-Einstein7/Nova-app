@@ -26,9 +26,11 @@ class Step3Skills extends StatelessWidget {
           SkillsStateLoading() || SkillsStateInitial() => const LoadingView(),
           SkillsStateError() => ErrorView(
               message: l.errorGeneric,
-              onRetry: () => context.read<SkillsCubit>().load(forceRefresh: true),
+              onRetry: () =>
+                  context.read<SkillsCubit>().load(forceRefresh: true),
             ),
-          SkillsStateLoaded(:final skills) => BlocBuilder<ChildFormCubit, ChildFormState>(
+          SkillsStateLoaded(:final skills) =>
+            BlocBuilder<ChildFormCubit, ChildFormState>(
               builder: (context, formState) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -46,8 +48,9 @@ class Step3Skills extends StatelessWidget {
                         skill: skill,
                         isSelected:
                             formState.selectedSkillIds.contains(skill.id),
-                        onToggle: () =>
-                            context.read<ChildFormCubit>().toggleSkill(skill.id),
+                        onToggle: () => context
+                            .read<ChildFormCubit>()
+                            .toggleSkill(skill.id),
                       ),
                     ),
                   ],
@@ -125,8 +128,8 @@ class _SkillTile extends StatelessWidget {
                         const SizedBox(height: 2),
                         Text(
                           skill.description!,
-                          style: AppTextStyles.bodySmall.copyWith(
-                              color: AppColors.textSecondary),
+                          style: AppTextStyles.bodySmall
+                              .copyWith(color: AppColors.textSecondary),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
