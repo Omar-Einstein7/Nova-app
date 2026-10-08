@@ -2,13 +2,15 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/nova_motion.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 
 /// Calm waiting screen shown while the AI backend generates an activity.
 /// Respects NovaMotion.shouldReduceMotion (system & settings).
 /// Pacing: 2.5 seconds per half-cycle (>= 5s full cycle, strictly >= 2000ms).
-/// No flashing, no opacity blinking.
+/// No flashing, no opacity blinking. Neumorphic soft depth.
 class GeneratingView extends StatefulWidget {
   const GeneratingView({super.key});
 
@@ -41,7 +43,7 @@ class _GeneratingViewState extends State<GeneratingView>
       duration: NovaMotion.minCycleDuration,
     )..repeat(reverse: true);
 
-    _scaleAnim = Tween<double>(begin: 0.92, end: 1.0).animate(
+    _scaleAnim = Tween<double>(begin: 0.94, end: 1.0).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
@@ -83,16 +85,26 @@ class _GeneratingViewState extends State<GeneratingView>
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Pulsing star / brain emoji (calm, subtle)
-                  reduceMotion
-                      ? const Text('🌟', style: TextStyle(fontSize: 72))
-                      : ScaleTransition(
-                          scale: _scaleAnim,
-                          child: const Text(
-                            '🌟',
-                            style: TextStyle(fontSize: 72),
-                          ),
-                        ),
+                  // Neumorphic pulsing circle
+                  NeumorphicContainer(
+                    shape: BoxShape.circle,
+                    width: 130,
+                    height: 130,
+                    distance: 6,
+                    blur: 14,
+                    color: AppColors.surface,
+                    child: Center(
+                      child: reduceMotion
+                          ? const Text('🌟', style: TextStyle(fontSize: 60))
+                          : ScaleTransition(
+                              scale: _scaleAnim,
+                              child: const Text(
+                                '🌟',
+                                style: TextStyle(fontSize: 60),
+                              ),
+                            ),
+                    ),
+                  ),
                   const SizedBox(height: AppSpacing.xxl),
 
                   // Animated message
@@ -103,8 +115,8 @@ class _GeneratingViewState extends State<GeneratingView>
                       activeMessage,
                       key: ValueKey(_messageIndex),
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w700,
                           ),
                       textAlign: TextAlign.center,
                     ),
@@ -127,7 +139,7 @@ class _GeneratingViewState extends State<GeneratingView>
                   ],
 
                   const SizedBox(height: AppSpacing.xxl),
-                  // Dots indicator (static when reduceMotion is true)
+                  // Dots indicator
                   _DotsIndicator(
                     controller: _controller,
                     reduceMotion: reduceMotion,
@@ -159,7 +171,7 @@ class _DotsIndicator extends StatelessWidget {
         children: List.generate(
           3,
           (_) => Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4),
+            padding: const EdgeInsets.symmetric(horizontal: 5),
             child: Container(
               width: 10,
               height: 10,
@@ -181,15 +193,16 @@ class _DotsIndicator extends StatelessWidget {
           children: List.generate(3, (i) {
             final offset = i / 3.0;
             final progress = ((controller.value + offset) % 1.0);
-            final size = 8.0 + 3.0 * progress;
+            final size = 8.0 + 4.0 * progress;
             return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 5),
               child: Container(
                 width: size,
                 height: size,
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
                   color: AppColors.primary,
                   shape: BoxShape.circle,
+                  boxShadow: AppNeumorphism.primaryGlowShadows(distance: 1, blur: 4),
                 ),
               ),
             );

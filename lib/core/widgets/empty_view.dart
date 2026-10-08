@@ -1,6 +1,8 @@
 import "package:flutter/material.dart";
 import "../theme/app_colors.dart";
+import "../theme/app_neumorphism.dart";
 import "../theme/app_spacing.dart";
+import "neumorphic_container.dart";
 
 class EmptyView extends StatelessWidget {
   const EmptyView({
@@ -24,36 +26,25 @@ class EmptyView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(
-              icon ?? Icons.inbox_rounded,
-              size: 64,
-              color: AppColors.textDisabled,
+            NeumorphicContainer(
+              shape: BoxShape.circle,
+              padding: const EdgeInsets.all(24),
+              color: AppColors.surface,
+              child: Icon(
+                icon ?? Icons.inbox_rounded,
+                size: 56,
+                color: AppColors.textDisabled,
+              ),
             ),
-            const SizedBox(height: AppSpacing.lg),
+            const SizedBox(height: AppSpacing.xl),
             Text(
               message ?? "لا توجد بيانات لعرضها.",
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                     color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
                   ),
             ),
-            // if (actionLabel != null && onAction != null) ...[
-            //   const SizedBox(height: AppSpacing.lg),
-            //   ElevatedButton(
-            //     onPressed: onAction,
-            //     style: ElevatedButton.styleFrom(
-            //       backgroundColor: AppColors.primary,
-            //       padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-            //       shape: RoundedRectangleBorder(
-            //         borderRadius: BorderRadius.circular(12),
-            //       ),
-            //     ),
-            //     child: Text(
-            //       actionLabel!,
-            //       style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-            //     ),
-            //   ),
-            // ],
           ],
         ),
       ),

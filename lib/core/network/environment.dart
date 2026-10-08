@@ -37,7 +37,7 @@ final class AppConfig {
   static bool get isDev => flavor == AppFlavor.development;
   static bool get isProd => flavor == AppFlavor.production;
 
-  static const String _defaultDevBaseUrl = 'http://192.168.1.6:3000/api/v1';
+  static const String _defaultDevBaseUrl = 'http://192.168.1.4:3000/api/v1';
   static const String _defaultProdBaseUrl = 'https://api.nova-learn.com/api/v1';
 
   /// Primary backend API base URL.
@@ -47,7 +47,7 @@ final class AppConfig {
     if (envUrl.isNotEmpty) return envUrl;
 
     const legacyUrl = String.fromEnvironment(
-      'http://192.168.1.6:3000/api/v1',
+      'http://192.168.1.4:3000/api/v1',
       defaultValue: '',
     );
     if (legacyUrl.isNotEmpty) return legacyUrl;

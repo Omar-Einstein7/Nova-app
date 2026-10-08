@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 
-/// Card representing a single child on the HomePage.
+/// Card representing a single child on the HomePage with Neumorphic styling.
 class ChildCard extends StatelessWidget {
   const ChildCard({
     super.key,
@@ -24,69 +26,69 @@ class ChildCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
 
-    return Card(
-      elevation: 0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: AppColors.border),
-      ),
+    return NeumorphicContainer(
+      onTap: onTap,
+      radius: 20,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
       color: AppColors.surface,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          child: Row(
-            children: [
-              // Avatar circle
-              _AvatarWidget(avatar: child.avatar, name: child.name),
-              const SizedBox(width: 14),
-              // Name + age
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      child.name,
-                      style: AppTextStyles.titleMedium,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      l.childAgeLabel(child.age),
-                      style: AppTextStyles.bodySmall
-                          .copyWith(color: AppColors.textSecondary),
-                    ),
-                  ],
+      child: Row(
+        children: [
+          // Neumorphic circular avatar
+          _AvatarWidget(avatar: child.avatar, name: child.name),
+          const SizedBox(width: 16),
+          // Name + age
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  child.name,
+                  style: AppTextStyles.titleMedium.copyWith(
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.textPrimary,
+                  ),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                 ),
+                const SizedBox(height: 4),
+                Text(
+                  l.childAgeLabel(child.age),
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Overflow menu
+          PopupMenuButton<_CardAction>(
+            key: Key('child_card_menu_${child.id}'),
+            icon: const Icon(Icons.more_vert, color: AppColors.textSecondary),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(16),
+            ),
+            color: AppColors.surface,
+            elevation: 4,
+            onSelected: (action) {
+              if (action == _CardAction.edit) onEdit();
+              if (action == _CardAction.delete) onDelete();
+            },
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: _CardAction.edit,
+                child: Text(l.edit, style: const TextStyle(fontWeight: FontWeight.w600)),
               ),
-              // Overflow menu
-              PopupMenuButton<_CardAction>(
-                key: Key('child_card_menu_${child.id}'),
-                icon:
-                    const Icon(Icons.more_vert, color: AppColors.textSecondary),
-                onSelected: (action) {
-                  if (action == _CardAction.edit) onEdit();
-                  if (action == _CardAction.delete) onDelete();
-                },
-                itemBuilder: (_) => [
-                  PopupMenuItem(
-                    value: _CardAction.edit,
-                    child: Text(l.edit),
-                  ),
-                  PopupMenuItem(
-                    value: _CardAction.delete,
-                    child: Text(
-                      l.delete,
-                      style: const TextStyle(color: Colors.redAccent),
-                    ),
-                  ),
-                ],
+              PopupMenuItem(
+                value: _CardAction.delete,
+                child: Text(
+                  l.delete,
+                  style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),
-        ),
+        ],
       ),
     );
   }
@@ -117,22 +119,21 @@ class _AvatarWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Map avatar key to an emoji for now [PLACEHOLDER: swap with Image.asset]
     final emoji = avatar != null && int.tryParse(avatar!) != null
         ? _emojis[int.parse(avatar!) % _emojis.length]
         : (name.isNotEmpty
             ? _emojis[name.codeUnitAt(0) % _emojis.length]
             : '🌟');
 
-    return Container(
-      width: 52,
-      height: 52,
-      decoration: BoxDecoration(
-        color: AppColors.surfaceVariant,
-        shape: BoxShape.circle,
-      ),
+    return NeumorphicContainer(
+      shape: BoxShape.circle,
+      width: 56,
+      height: 56,
+      distance: 3,
+      blur: 6,
+      color: AppColors.surfaceVariant.withValues(alpha: 0.6),
       child: Center(
-        child: Text(emoji, style: const TextStyle(fontSize: 26)),
+        child: Text(emoji, style: const TextStyle(fontSize: 28)),
       ),
     );
   }

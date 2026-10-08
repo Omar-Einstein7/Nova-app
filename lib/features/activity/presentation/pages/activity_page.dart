@@ -5,7 +5,11 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/error/error_mapper.dart';
 import '../../../../core/services/tts_service.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/neumorphic_card.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../../core/widgets/parent_gate_dialog.dart';
 import '../../../../core/di/injection.dart';
 import '../../domain/entities/activity.dart';
@@ -40,8 +44,16 @@ class ActivityPage extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                const Text('🎈', style: TextStyle(fontSize: 56)),
-                const SizedBox(height: AppSpacing.lg),
+                NeumorphicContainer(
+                  shape: BoxShape.circle,
+                  width: 100,
+                  height: 100,
+                  distance: 5,
+                  blur: 10,
+                  color: AppColors.surface,
+                  child: const Center(child: Text('🎈', style: TextStyle(fontSize: 48))),
+                ),
+                const SizedBox(height: AppSpacing.xl),
                 Text(
                   'لم نتمكن من استعادة النشاط السابق',
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -59,9 +71,9 @@ class ActivityPage extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.xxl),
-                ElevatedButton(
+                AppButton(
+                  label: 'العودة للرئيسية',
                   onPressed: () => context.go('/home'),
-                  child: const Text('العودة للرئيسية'),
                 ),
               ],
             ),
@@ -311,16 +323,25 @@ class _QuestionScreen extends StatelessWidget {
                           backgroundColor: AppColors.surface,
                           shape: const RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.vertical(top: Radius.circular(24)),
+                                BorderRadius.vertical(top: Radius.circular(28)),
                           ),
                           builder: (ctx) => Padding(
                             padding: const EdgeInsets.all(AppSpacing.xxl),
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const Text('💡',
-                                    style: TextStyle(fontSize: 48)),
-                                const SizedBox(height: AppSpacing.md),
+                                NeumorphicContainer(
+                                  shape: BoxShape.circle,
+                                  width: 72,
+                                  height: 72,
+                                  distance: 4,
+                                  blur: 8,
+                                  color: AppColors.surface,
+                                  child: const Center(
+                                    child: Text('💡', style: TextStyle(fontSize: 36)),
+                                  ),
+                                ),
+                                const SizedBox(height: AppSpacing.lg),
                                 Text(
                                   'تلميح ومساعدة',
                                   style: Theme.of(ctx)
@@ -340,16 +361,13 @@ class _QuestionScreen extends StatelessWidget {
                                       .bodyLarge
                                       ?.copyWith(
                                         color: AppColors.textPrimary,
+                                        height: 1.5,
                                       ),
                                 ),
                                 const SizedBox(height: AppSpacing.xl),
-                                SizedBox(
-                                  width: double.infinity,
-                                  height: 52,
-                                  child: ElevatedButton(
-                                    onPressed: () => Navigator.of(ctx).pop(),
-                                    child: const Text('فهمت، شكراً!'),
-                                  ),
+                                AppButton(
+                                  label: 'فهمت، شكراً!',
+                                  onPressed: () => Navigator.of(ctx).pop(),
                                 ),
                               ],
                             ),
@@ -402,14 +420,28 @@ class _LoadingView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const CircularProgressIndicator(),
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 80,
+            height: 80,
+            distance: 4,
+            blur: 8,
+            color: AppColors.surface,
+            child: const Center(
+              child: SizedBox(
+                width: 32,
+                height: 32,
+                child: CircularProgressIndicator(strokeWidth: 3),
+              ),
+            ),
+          ),
           const SizedBox(height: AppSpacing.xl),
           Text(
             message,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge
-                ?.copyWith(color: AppColors.textSecondary),
+                ?.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w600),
           ),
         ],
       ),
@@ -438,29 +470,35 @@ class _ErrorView extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text('😔',
-              style: TextStyle(fontSize: 64), textAlign: TextAlign.center),
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 100,
+            height: 100,
+            distance: 5,
+            blur: 10,
+            color: AppColors.surface,
+            child: const Center(
+              child: Text('😔', style: TextStyle(fontSize: 52)),
+            ),
+          ),
           const SizedBox(height: AppSpacing.xl),
           Text(
             message,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge
-                ?.copyWith(color: AppColors.textSecondary),
+                ?.copyWith(color: AppColors.textSecondary, fontWeight: FontWeight.w500),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: AppSpacing.xxl),
-          SizedBox(
-            height: 56,
-            child: ElevatedButton(
-              onPressed: onRetry,
-              child: const Text('حاول مرة أخرى'),
-            ),
+          AppButton(
+            onPressed: onRetry,
+            label: 'حاول مرة أخرى',
           ),
           const SizedBox(height: AppSpacing.md),
           TextButton(
             onPressed: onExit,
-            child: const Text('العودة'),
+            child: const Text('العودة', style: TextStyle(color: AppColors.textSecondary, fontWeight: FontWeight.bold)),
           ),
         ],
       ),

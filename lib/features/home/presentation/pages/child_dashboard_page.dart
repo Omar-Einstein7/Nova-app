@@ -5,8 +5,13 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/di/injection.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/utils/formatters.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/loading_view.dart';
+import '../../../../core/widgets/neumorphic_card.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 import '../../../children/presentation/cubit/children_list_cubit.dart';
 import '../../../children/presentation/cubit/children_list_state.dart';
@@ -50,13 +55,28 @@ class _DashboardView extends StatelessWidget {
             slivers: [
               // ── App bar / header ─────────────────────────────────────────
               SliverAppBar(
-                expandedHeight: 200,
+                expandedHeight: 220,
                 pinned: true,
-                backgroundColor: AppColors.primary,
-                leading: IconButton(
-                  icon:
-                      const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-                  onPressed: () => context.pop(),
+                backgroundColor: AppColors.surface,
+                elevation: 0,
+                scrolledUnderElevation: 0,
+                leading: Padding(
+                  padding: const EdgeInsetsDirectional.only(start: 12),
+                  child: Center(
+                    child: NeumorphicContainer(
+                      shape: BoxShape.circle,
+                      width: 40,
+                      height: 40,
+                      distance: 3,
+                      blur: 6,
+                      color: AppColors.surface,
+                      child: IconButton(
+                        icon: const Icon(Icons.arrow_back_ios_new,
+                            color: AppColors.textPrimary, size: 18),
+                        onPressed: () => context.pop(),
+                      ),
+                    ),
+                  ),
                 ),
                 flexibleSpace: FlexibleSpaceBar(
                   background: _DashboardHeader(child: child),
@@ -71,7 +91,7 @@ class _DashboardView extends StatelessWidget {
                     children: [
                       // ── Start play button ────────────────────────────────
                       _StartPlayButton(state: state, childId: childId),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
                       // ── Recommendation card ──────────────────────────────
                       _RecommendationCard(
@@ -79,11 +99,11 @@ class _DashboardView extends StatelessWidget {
                         childId: childId,
                         child: child,
                       ),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
                       // ── Quick stats ──────────────────────────────────────
                       _QuickStatsRow(state: state),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 24),
 
                       // ── Full progress link ───────────────────────────────
                       _ProgressLink(childId: childId),
@@ -127,27 +147,30 @@ class _DashboardHeader extends StatelessWidget {
     final age = child?.age;
 
     return Container(
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          colors: [AppColors.primary, AppColors.secondary],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-      ),
+      color: AppColors.surface,
       child: SafeArea(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const SizedBox(height: 40),
+            const SizedBox(height: 36),
             _AvatarCircle(avatar: child?.avatar, name: name),
-            const SizedBox(height: 10),
-            Text(name,
-                style: AppTextStyles.titleLarge
-                    .copyWith(color: Colors.white, fontSize: 22)),
+            const SizedBox(height: 12),
+            Text(
+              name,
+              style: AppTextStyles.titleLarge.copyWith(
+                color: AppColors.textPrimary,
+                fontSize: 22,
+                fontWeight: FontWeight.w800,
+              ),
+            ),
             if (age != null)
-              Text(l.childAgeLabel(age),
-                  style:
-                      AppTextStyles.bodySmall.copyWith(color: Colors.white70)),
+              Text(
+                l.childAgeLabel(age),
+                style: AppTextStyles.bodySmall.copyWith(
+                  color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
           ],
         ),
       ),
@@ -183,15 +206,24 @@ class _AvatarCircle extends StatelessWidget {
             ? _emojis[name.codeUnitAt(0) % _emojis.length]
             : '🌟');
 
-    return Container(
-      width: 80,
-      height: 80,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withValues(alpha: 0.2),
-        border: Border.all(color: Colors.white, width: 2),
+    return NeumorphicContainer(
+      shape: BoxShape.circle,
+      width: 84,
+      height: 84,
+      distance: 5,
+      blur: 12,
+      color: AppColors.surface,
+      child: Center(
+        child: Container(
+          width: 70,
+          height: 70,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: AppColors.surfaceVariant,
+          ),
+          child: Center(child: Text(emoji, style: const TextStyle(fontSize: 38))),
+        ),
       ),
-      child: Center(child: Text(emoji, style: const TextStyle(fontSize: 38))),
     );
   }
 }
@@ -211,36 +243,15 @@ class _StartPlayButton extends StatelessWidget {
         ? (state as DashboardStateLoaded).recommendation
         : null;
 
-    return SizedBox(
-      width: double.infinity,
-      height: 64,
-      child: ElevatedButton.icon(
-        key: const Key('start_play_button'),
-        onPressed: isLoading || recommendation == null
-            ? null
-            : () => _startActivity(context, recommendation, childId),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.primary,
-          disabledBackgroundColor: AppColors.primary.withValues(alpha: 0.4),
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
-          elevation: 4,
-        ),
-        icon: isLoading
-            ? const SizedBox(
-                width: 20,
-                height: 20,
-                child: CircularProgressIndicator(
-                    color: Colors.white, strokeWidth: 2),
-              )
-            : const Icon(Icons.play_circle_outline,
-                color: Colors.white, size: 28),
-        label: Text(
-          l.startPlay,
-          style: const TextStyle(
-              color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-      ),
+    return AppButton(
+      key: const Key('start_play_button'),
+      variant: AppButtonVariant.child,
+      isLoading: isLoading,
+      icon: const Icon(Icons.play_circle_outline, color: Colors.white, size: 28),
+      label: l.startPlay,
+      onPressed: isLoading || recommendation == null
+          ? null
+          : () => _startActivity(context, recommendation, childId),
     );
   }
 
@@ -293,12 +304,24 @@ class _RecommendationCard extends StatelessWidget {
         children: [
           Row(
             children: [
-              const Icon(Icons.star_outline, color: AppColors.primary),
-              const SizedBox(width: 8),
+              NeumorphicContainer(
+                shape: BoxShape.circle,
+                width: 38,
+                height: 38,
+                distance: 2,
+                blur: 5,
+                color: AppColors.surface,
+                child: const Icon(Icons.star_rounded, color: AppColors.primary, size: 22),
+              ),
+              const SizedBox(width: 12),
               Expanded(
-                child: Text(skillName,
-                    style: AppTextStyles.titleSmall
-                        .copyWith(color: AppColors.primary)),
+                child: Text(
+                  skillName,
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: AppColors.primary,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
               ),
               TextButton(
                 key: const Key('choose_skill_btn'),
@@ -315,34 +338,50 @@ class _RecommendationCard extends StatelessWidget {
                     });
                   }
                 },
-                child: Text(l.chooseSkill,
-                    style: const TextStyle(color: AppColors.secondary)),
+                child: Text(
+                  l.chooseSkill,
+                  style: const TextStyle(
+                    color: AppColors.secondary,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
             ],
           ),
           if (reason.isNotEmpty) ...[
-            const SizedBox(height: 4),
-            Text(reason,
-                style: AppTextStyles.bodySmall
-                    .copyWith(color: AppColors.textSecondary)),
+            const SizedBox(height: 8),
+            Text(
+              reason,
+              style: AppTextStyles.bodySmall.copyWith(
+                color: AppColors.textSecondary,
+                height: 1.5,
+              ),
+            ),
           ],
           if (suggestBreak) ...[
-            const SizedBox(height: 8),
+            const SizedBox(height: 10),
             Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               decoration: BoxDecoration(
-                color: AppColors.starFilled.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(8),
+                color: AppColors.starFilled.withValues(alpha: 0.15),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.starFilled.withValues(alpha: 0.4),
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   const Icon(Icons.coffee_outlined,
-                      size: 14, color: AppColors.textSecondary),
-                  const SizedBox(width: 6),
-                  Text(l.suggestBreak,
-                      style: AppTextStyles.bodySmall
-                          .copyWith(color: AppColors.textSecondary)),
+                      size: 16, color: AppColors.textSecondary),
+                  const SizedBox(width: 8),
+                  Text(
+                    l.suggestBreak,
+                    style: AppTextStyles.bodySmall.copyWith(
+                      color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -386,7 +425,7 @@ class _QuickStatsRow extends StatelessWidget {
             label: l.statSessions,
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatChip(
             key: const Key('stat_streak'),
@@ -395,13 +434,14 @@ class _QuickStatsRow extends StatelessWidget {
             label: l.statStreak,
           ),
         ),
-        const SizedBox(width: 10),
+        const SizedBox(width: 12),
         Expanded(
           child: _StatChip(
             key: const Key('stat_success'),
             icon: Icons.emoji_events_outlined,
-            value:
-                '${((progress['avgSuccessRate'] as num? ?? 0) * 100).round()}%',
+            value: NovaFormatters.formatPercentage(
+              progress['avgSuccessRate'] as num?,
+            ),
             label: l.statSuccess,
           ),
         ),
@@ -423,24 +463,33 @@ class _StatChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.border),
-      ),
+    return NeumorphicContainer(
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 8),
+      radius: 18,
+      distance: 3,
+      blur: 7,
+      color: AppColors.surface,
       child: Column(
         children: [
-          Icon(icon, color: AppColors.primary, size: 22),
-          const SizedBox(height: 4),
-          Text(value,
-              style: AppTextStyles.titleMedium
-                  .copyWith(color: AppColors.primary, fontSize: 20)),
-          Text(label,
-              style: AppTextStyles.bodySmall
-                  .copyWith(color: AppColors.textSecondary),
-              textAlign: TextAlign.center),
+          Icon(icon, color: AppColors.primary, size: 24),
+          const SizedBox(height: 6),
+          Text(
+            value,
+            style: AppTextStyles.titleMedium.copyWith(
+              color: AppColors.textPrimary,
+              fontSize: 20,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            label,
+            style: AppTextStyles.bodySmall.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
@@ -456,15 +505,23 @@ class _ProgressLink extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return TextButton.icon(
-      key: const Key('full_progress_link'),
-      onPressed: () => context.pushNamed(
-        'progress',
-        pathParameters: {'childId': childId},
+    return Center(
+      child: TextButton.icon(
+        key: const Key('full_progress_link'),
+        onPressed: () => context.pushNamed(
+          'progress',
+          pathParameters: {'childId': childId},
+        ),
+        icon: const Icon(Icons.bar_chart_rounded, color: AppColors.primary),
+        label: Text(
+          l.viewFullProgress,
+          style: const TextStyle(
+            color: AppColors.primary,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+          ),
+        ),
       ),
-      icon: const Icon(Icons.bar_chart_outlined, color: AppColors.primary),
-      label: Text(l.viewFullProgress,
-          style: const TextStyle(color: AppColors.primary)),
     );
   }
 }
@@ -478,21 +535,20 @@ class _CardShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
+    return NeumorphicCard(
+      radius: 20,
+      padding: const EdgeInsets.all(18),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: AppTextStyles.labelMedium
-                  .copyWith(color: AppColors.textSecondary)),
-          const SizedBox(height: 10),
+          Text(
+            title,
+            style: AppTextStyles.labelMedium.copyWith(
+              color: AppColors.textSecondary,
+              fontWeight: FontWeight.w700,
+            ),
+          ),
+          const SizedBox(height: 12),
           child,
         ],
       ),

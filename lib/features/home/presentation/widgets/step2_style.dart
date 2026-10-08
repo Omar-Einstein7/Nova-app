@@ -3,13 +3,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_text_field.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 import '../../../children/presentation/cubit/child_form_cubit.dart';
 import '../../../children/presentation/cubit/child_form_state.dart';
 
-/// Step 2: interests chips + learning style cards.
+/// Step 2: interests chips + learning style cards with Neumorphic styling.
 class Step2Style extends StatefulWidget {
   const Step2Style({super.key});
 
@@ -37,7 +39,7 @@ class _Step2StyleState extends State<Step2Style> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // ── Interests ──────────────────────────────────────────────────
-            Text(l.interestsLabel, style: AppTextStyles.labelMedium),
+            Text(l.interestsLabel, style: AppTextStyles.labelMedium.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 4),
             Text(l.interestsHint,
                 style: AppTextStyles.bodySmall
@@ -47,7 +49,7 @@ class _Step2StyleState extends State<Step2Style> {
               selected: state.interests,
               onToggle: cubit.toggleInterest,
             ),
-            const SizedBox(height: 12),
+            const SizedBox(height: 16),
             // Custom interest input
             Row(
               children: [
@@ -58,22 +60,30 @@ class _Step2StyleState extends State<Step2Style> {
                     hint: l.addCustomInterestHint,
                   ),
                 ),
-                const SizedBox(width: 8),
-                IconButton(
-                  key: const Key('add_interest_btn'),
-                  onPressed: () {
-                    cubit.addCustomInterest(_customCtrl.text);
-                    _customCtrl.clear();
-                  },
-                  icon: const Icon(Icons.add_circle,
-                      color: AppColors.primary, size: 32),
+                const SizedBox(width: 10),
+                NeumorphicContainer(
+                  shape: BoxShape.circle,
+                  width: 48,
+                  height: 48,
+                  distance: 3,
+                  blur: 6,
+                  color: AppColors.surface,
+                  child: IconButton(
+                    key: const Key('add_interest_btn'),
+                    onPressed: () {
+                      cubit.addCustomInterest(_customCtrl.text);
+                      _customCtrl.clear();
+                    },
+                    icon: const Icon(Icons.add_rounded,
+                        color: AppColors.primary, size: 28),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 32),
 
             // ── Learning style ─────────────────────────────────────────────
-            Text(l.learningStyleLabel, style: AppTextStyles.labelMedium),
+            Text(l.learningStyleLabel, style: AppTextStyles.labelMedium.copyWith(fontWeight: FontWeight.w700)),
             const SizedBox(height: 12),
             _LearningStyleCards(
               selected: state.learningStyle,
@@ -96,7 +106,6 @@ class _InterestChips extends StatelessWidget {
   final List<String> selected;
   final void Function(String) onToggle;
 
-  // Pre-defined interests [PLACEHOLDER: move to l10n if multilingual support added]
   static const _defaults = [
     'حيوانات',
     'سيارات',
@@ -112,35 +121,47 @@ class _InterestChips extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Combine defaults with any custom interests that were added
     final allInterests = {
       ..._defaults,
       ...selected.where((s) => !_defaults.contains(s)),
     }.toList();
 
     return Wrap(
-      spacing: 8,
-      runSpacing: 8,
+      spacing: 10,
+      runSpacing: 10,
       children: allInterests.map((interest) {
         final isSelected = selected.contains(interest);
-        return FilterChip(
+        return GestureDetector(
           key: Key('interest_$interest'),
-          label: Text(interest),
-          selected: isSelected,
-          onSelected: (_) => onToggle(interest),
-          selectedColor: AppColors.primary.withValues(alpha: 0.15),
-          checkmarkColor: AppColors.primary,
-          labelStyle: AppTextStyles.bodySmall.copyWith(
-            color: isSelected ? AppColors.primary : AppColors.textPrimary,
-            fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-            side: BorderSide(
-              color: isSelected ? AppColors.primary : AppColors.border,
+          onTap: () => onToggle(interest),
+          child: NeumorphicContainer(
+            radius: 20,
+            style: isSelected ? NeumorphicStyle.debossed : NeumorphicStyle.embossed,
+            color: isSelected ? AppColors.surfaceVariant : AppColors.surface,
+            distance: isSelected ? 2 : 3,
+            blur: isSelected ? 4 : 6,
+            border: isSelected
+                ? Border.all(color: AppColors.primary, width: 1.5)
+                : Border.all(color: Colors.white.withValues(alpha: 0.6)),
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (isSelected) ...[
+                  const Icon(Icons.check_rounded, size: 16, color: AppColors.primary),
+                  const SizedBox(width: 4),
+                ],
+                Text(
+                  interest,
+                  style: TextStyle(
+                    color: isSelected ? AppColors.primary : AppColors.textPrimary,
+                    fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
+                    fontSize: 13,
+                  ),
+                ),
+              ],
             ),
           ),
-          backgroundColor: AppColors.surface,
         );
       }).toList(),
     );
@@ -222,61 +243,60 @@ class _StyleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(16),
-            color: isSelected
-                ? AppColors.primary.withValues(alpha: 0.08)
-                : AppColors.surface,
-            border: Border.all(
-              color: isSelected ? AppColors.primary : AppColors.border,
-              width: isSelected ? 2 : 1,
+    return NeumorphicContainer(
+      onTap: onTap,
+      radius: 18,
+      style: isSelected ? NeumorphicStyle.debossed : NeumorphicStyle.embossed,
+      color: isSelected ? AppColors.surfaceVariant : AppColors.surface,
+      distance: isSelected ? 2 : 4,
+      blur: isSelected ? 4 : 8,
+      border: isSelected
+          ? Border.all(color: AppColors.primary, width: 2)
+          : Border.all(color: Colors.white.withValues(alpha: 0.6)),
+      padding: const EdgeInsets.all(16),
+      child: Row(
+        children: [
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 48,
+            height: 48,
+            distance: 2,
+            blur: 4,
+            color: isSelected ? AppColors.primary : AppColors.surface,
+            child: Icon(
+              icon,
+              color: isSelected ? Colors.white : AppColors.primary,
+              size: 24,
             ),
           ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color:
-                      isSelected ? AppColors.primary : AppColors.surfaceVariant,
+          const SizedBox(width: 14),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: AppTextStyles.titleSmall.copyWith(
+                    color: isSelected
+                        ? AppColors.primary
+                        : AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
-                child: Icon(icon,
-                    color: isSelected ? Colors.white : AppColors.textSecondary,
-                    size: 24),
-              ),
-              const SizedBox(width: 14),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(title,
-                        style: AppTextStyles.titleSmall.copyWith(
-                          color: isSelected
-                              ? AppColors.primary
-                              : AppColors.textPrimary,
-                        )),
-                    const SizedBox(height: 2),
-                    Text(description,
-                        style: AppTextStyles.bodySmall
-                            .copyWith(color: AppColors.textSecondary)),
-                  ],
+                const SizedBox(height: 2),
+                Text(
+                  description,
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
-              ),
-              if (isSelected)
-                const Icon(Icons.check_circle,
-                    color: AppColors.primary, size: 22),
-            ],
+              ],
+            ),
           ),
-        ),
+          if (isSelected)
+            const Icon(Icons.check_circle,
+                color: AppColors.primary, size: 22),
+        ],
       ),
     );
   }

@@ -3,14 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/di/injection.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/router/route_names.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/neumorphic_card.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 import '../../../skills/presentation/cubit/skills_cubit.dart';
 import '../../../skills/presentation/cubit/skills_state.dart';
 
-/// Page shown before generating an activity.
+/// Page shown before generating an activity with Neumorphic styling.
 /// Shows the child's assigned skills with level badges.
 /// Tapping a skill navigates to ActivityPage with skillId + childId.
 ///
@@ -55,94 +59,105 @@ class _StartActivityPageState extends State<StartActivityPage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<SkillsCubit>.value(
-        value: getIt<SkillsCubit>()..load(),
-        child: Scaffold(
-          backgroundColor: AppColors.background,
-          appBar: AppBar(
-            backgroundColor: AppColors.background,
-            elevation: 0,
-            centerTitle: true,
-            title: const Text(
-              'اختر مهارة',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            leading: BackButton(color: AppColors.primary),
+      value: getIt<SkillsCubit>()..load(),
+      child: Scaffold(
+        backgroundColor: AppColors.background,
+        appBar: AppBar(
+          backgroundColor: AppColors.surface,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: true,
+          title: const Text(
+            'اختر مهارة',
+            style: TextStyle(fontWeight: FontWeight.w800),
           ),
-          body: SafeArea(
-            child: Padding(
-              padding: const EdgeInsets.all(AppSpacing.xl),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  // Child greeting
-                  _ChildHeader(child: widget.child),
-                  const SizedBox(height: AppSpacing.xxl),
-
-                  Text(
-                    'مهارات ${widget.child.name}',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
-                  ),
-                  const SizedBox(height: AppSpacing.md),
-
-                  // Skills list
-                  Expanded(
-                    child: widget.child.skills.isEmpty
-                        ? const _NoSkillsView()
-                        : BlocBuilder<SkillsCubit, SkillsState>(
-                            builder: (context, skillsState) {
-                              final allSkills = skillsState
-                                  .maybeWhen(
-                                    loaded: (s) => s,
-                                    orElse: () => <dynamic>[],
-                                  )
-                                  .cast<dynamic>();
-
-                              return ListView.separated(
-                                itemCount: widget.child.skills.length,
-                                separatorBuilder: (_, __) =>
-                                    const SizedBox(height: AppSpacing.md),
-                                itemBuilder: (context, index) {
-                                  final childSkill = widget.child.skills[index];
-                                  final skillName = _findSkillName(
-                                    allSkills,
-                                    childSkill.skillId,
-                                    childSkill.key,
-                                  );
-                                  return _SkillCard(
-                                    skillId: childSkill.skillId,
-                                    name: skillName,
-                                    level: childSkill.level,
-                                    onTap: () => _navigate(childSkill.skillId),
-                                  );
-                                },
-                              );
-                            },
-                          ),
-                  ),
-                  const SizedBox(height: AppSpacing.xl),
-
-                  // Generate without specific skill
-                  OutlinedButton(
-                    onPressed: () => _navigate(null),
-                    style: OutlinedButton.styleFrom(
-                      minimumSize: const Size.fromHeight(52),
-                      side: BorderSide(color: AppColors.primary),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14),
-                      ),
-                    ),
-                    child: Text(
-                      'نشاط عشوائي 🎲',
-                      style: TextStyle(color: AppColors.primary, fontSize: 16),
-                    ),
-                  ),
-                ],
+          leading: Padding(
+            padding: const EdgeInsetsDirectional.only(start: 12),
+            child: Center(
+              child: NeumorphicContainer(
+                shape: BoxShape.circle,
+                width: 40,
+                height: 40,
+                distance: 3,
+                blur: 6,
+                color: AppColors.surface,
+                child: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new,
+                      color: AppColors.textPrimary, size: 18),
+                  onPressed: () => context.pop(),
+                ),
               ),
             ),
           ),
-        ));
+        ),
+        body: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // Child greeting
+                _ChildHeader(child: widget.child),
+                const SizedBox(height: AppSpacing.xxl),
+
+                Text(
+                  'مهارات ${widget.child.name}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w700,
+                      ),
+                ),
+                const SizedBox(height: AppSpacing.md),
+
+                // Skills list
+                Expanded(
+                  child: widget.child.skills.isEmpty
+                      ? const _NoSkillsView()
+                      : BlocBuilder<SkillsCubit, SkillsState>(
+                          builder: (context, skillsState) {
+                            final allSkills = skillsState
+                                .maybeWhen(
+                                  loaded: (s) => s,
+                                  orElse: () => <dynamic>[],
+                                )
+                                .cast<dynamic>();
+
+                            return ListView.separated(
+                              itemCount: widget.child.skills.length,
+                              separatorBuilder: (_, __) =>
+                                 const SizedBox(height: AppSpacing.md),
+                              itemBuilder: (context, index) {
+                                final childSkill = widget.child.skills[index];
+                                final skillName = _findSkillName(
+                                  allSkills,
+                                  childSkill.skillId,
+                                  childSkill.key,
+                                );
+                                return _SkillCard(
+                                  skillId: childSkill.skillId,
+                                  name: skillName,
+                                  level: childSkill.level,
+                                  onTap: () => _navigate(childSkill.skillId),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                ),
+                const SizedBox(height: AppSpacing.xl),
+
+                // Generate without specific skill
+                AppButton(
+                  variant: AppButtonVariant.secondary,
+                  label: 'نشاط عشوائي 🎲',
+                  onPressed: () => _navigate(null),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   String _findSkillName(List<dynamic> skills, String id, String fallbackKey) {
@@ -165,27 +180,23 @@ class _ChildHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return NeumorphicCard(
+      radius: 20,
       padding: const EdgeInsets.all(AppSpacing.lg),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: [
-            AppColors.primary.withValues(alpha: 0.12),
-            AppColors.secondary.withValues(alpha: 0.08),
-          ],
-          begin: AlignmentDirectional.topStart,
-          end: AlignmentDirectional.bottomEnd,
-        ),
-        borderRadius: BorderRadius.circular(20),
-      ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 28,
-            backgroundColor: AppColors.primary.withValues(alpha: 0.2),
-            child: Text(
-              child.avatar ?? (child.name.isNotEmpty ? child.name[0] : '👤'),
-              style: const TextStyle(fontSize: 24),
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 56,
+            height: 56,
+            distance: 3,
+            blur: 6,
+            color: AppColors.surfaceVariant,
+            child: Center(
+              child: Text(
+                child.avatar ?? (child.name.isNotEmpty ? child.name[0] : '👤'),
+                style: const TextStyle(fontSize: 26),
+              ),
             ),
           ),
           const SizedBox(width: AppSpacing.lg),
@@ -196,14 +207,16 @@ class _ChildHeader extends StatelessWidget {
                 Text(
                   'يلا ${child.name}!',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.w800,
                         color: AppColors.primary,
                       ),
                 ),
+                const SizedBox(height: 2),
                 Text(
                   'اختر مهارة وابدأ النشاط',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
                       ),
                 ),
               ],
@@ -244,61 +257,56 @@ class _SkillCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
+    return NeumorphicContainer(
+      onTap: onTap,
+      radius: 18,
+      distance: 3,
+      blur: 7,
       color: AppColors.surface,
-      borderRadius: BorderRadius.circular(16),
-      elevation: 1,
-      shadowColor: Colors.black12,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: Padding(
-          padding: const EdgeInsets.all(AppSpacing.lg),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
-                decoration: BoxDecoration(
-                  color: AppColors.primary.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: const Icon(Icons.lightbulb_outline,
-                    color: AppColors.primary),
-              ),
-              const SizedBox(width: AppSpacing.lg),
-              Expanded(
-                child: Text(
-                  name,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: AppColors.textPrimary,
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-              ),
-              // Level badge
-              Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: AppSpacing.sm, vertical: 4),
-                decoration: BoxDecoration(
-                  color: _levelColor.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: _levelColor, width: 1),
-                ),
-                child: Text(
-                  _levelLabel,
-                  style: TextStyle(
-                    color: _levelColor,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.sm),
-              const Icon(Icons.chevron_right, color: AppColors.textSecondary),
-            ],
+      padding: const EdgeInsets.all(AppSpacing.lg),
+      child: Row(
+        children: [
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 44,
+            height: 44,
+            distance: 2,
+            blur: 4,
+            color: AppColors.surfaceVariant,
+            child: const Icon(Icons.lightbulb_outline,
+                color: AppColors.primary, size: 22),
           ),
-        ),
+          const SizedBox(width: AppSpacing.lg),
+          Expanded(
+            child: Text(
+              name,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.w700,
+                  ),
+            ),
+          ),
+          // Level badge
+          Container(
+            padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.sm, vertical: 4),
+            decoration: BoxDecoration(
+              color: _levelColor.withValues(alpha: 0.15),
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: _levelColor, width: 1),
+            ),
+            child: Text(
+              _levelLabel,
+              style: TextStyle(
+                color: _levelColor,
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: AppSpacing.sm),
+          const Icon(Icons.chevron_right, color: AppColors.textSecondary),
+        ],
       ),
     );
   }
@@ -313,12 +321,21 @@ class _NoSkillsView extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text('📚', style: TextStyle(fontSize: 48)),
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 80,
+            height: 80,
+            distance: 4,
+            blur: 8,
+            color: AppColors.surface,
+            child: const Center(child: Text('📚', style: TextStyle(fontSize: 40))),
+          ),
           const SizedBox(height: AppSpacing.lg),
           Text(
             'لم تُحدَّد مهارات بعد.\nيمكنك توليد نشاط عشوائي!',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AppColors.textSecondary,
+                  fontWeight: FontWeight.w500,
                 ),
             textAlign: TextAlign.center,
           ),

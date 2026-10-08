@@ -7,10 +7,12 @@ import '../../../../core/error/failures.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/empty_view.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 import '../../../children/presentation/cubit/children_list_cubit.dart';
 import '../../../children/presentation/cubit/children_list_state.dart';
@@ -46,17 +48,33 @@ class _HomeView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        backgroundColor: AppColors.primary,
+        backgroundColor: AppColors.surface,
         elevation: 0,
-        title: Text(l.homeTitle,
-            style: AppTextStyles.titleLarge.copyWith(color: Colors.white)),
+        title: Text(
+          l.homeTitle,
+          style: AppTextStyles.titleLarge.copyWith(
+            color: AppColors.textPrimary,
+            fontWeight: FontWeight.w800,
+          ),
+        ),
         centerTitle: false,
         actions: [
-          IconButton(
-            key: const Key('home_settings_button'),
-            icon: const Icon(Icons.settings_outlined, color: Colors.white),
-            tooltip: AppLocalizations.of(context).settingsTitle,
-            onPressed: () => context.pushNamed('settings'),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(end: 16),
+            child: NeumorphicContainer(
+              shape: BoxShape.circle,
+              width: 44,
+              height: 44,
+              distance: 3,
+              blur: 6,
+              color: AppColors.surface,
+              child: IconButton(
+                key: const Key('home_settings_button'),
+                icon: const Icon(Icons.settings_outlined, color: AppColors.textPrimary, size: 22),
+                tooltip: AppLocalizations.of(context).settingsTitle,
+                onPressed: () => context.pushNamed('settings'),
+              ),
+            ),
           ),
         ],
       ),
@@ -85,14 +103,20 @@ class _HomeView extends StatelessWidget {
           final count =
               state is ChildrenListStateLoaded ? state.children.length : 0;
           if (count >= 5) return const SizedBox.shrink();
-          return FloatingActionButton.extended(
-            key: const Key('home_add_child_fab'),
-            onPressed: () => _openAddChild(context),
-            backgroundColor: AppColors.primary,
-            icon: const Icon(Icons.add, color: Colors.white),
-            label: Text(
-              AppLocalizations.of(context).addChildButton,
-              style: const TextStyle(color: Colors.white),
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              boxShadow: AppNeumorphism.primaryGlowShadows(distance: 4, blur: 12),
+            ),
+            child: FloatingActionButton.extended(
+              key: const Key('home_add_child_fab'),
+              onPressed: () => _openAddChild(context),
+              backgroundColor: AppColors.primary,
+              icon: const Icon(Icons.add, color: Colors.white),
+              label: Text(
+                AppLocalizations.of(context).addChildButton,
+                style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              ),
             ),
           );
         },
@@ -153,7 +177,7 @@ class _ChildrenBody extends StatelessWidget {
       child: ListView.separated(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
         itemCount: children.length,
-        separatorBuilder: (_, __) => const SizedBox(height: 12),
+        separatorBuilder: (_, __) => const SizedBox(height: 16),
         itemBuilder: (context, index) {
           final child = children[index];
           return ChildCard(
@@ -192,7 +216,7 @@ class _ChildrenBody extends StatelessWidget {
             onPressed: () => Navigator.pop(context, true),
             child: Text(
               l.delete,
-              style: const TextStyle(color: Colors.redAccent),
+              style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
             ),
           ),
         ],

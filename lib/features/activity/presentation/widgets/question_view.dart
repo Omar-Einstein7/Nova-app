@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../domain/entities/activity.dart';
 
-/// Renders one question with its 3 selectable options.
+/// Renders one question with its 3 selectable options in Neumorphic styling.
 /// Options are full-width cards with large touch targets (≥ 64dp).
 /// Supports text scale up to 1.5 without overflow.
 /// Includes Semantics labels, TTS button, and gentle Help button.
@@ -47,6 +49,7 @@ class QuestionView extends StatelessWidget {
                 'سؤال ${question.index + 1} من $totalQuestions',
                 style: Theme.of(context).textTheme.labelLarge?.copyWith(
                       color: AppColors.textSecondary,
+                      fontWeight: FontWeight.w700,
                     ),
               ),
               const Spacer(),
@@ -58,7 +61,7 @@ class QuestionView extends StatelessWidget {
                     children: List.generate(
                       3,
                       (i) => Padding(
-                        padding: const EdgeInsetsDirectional.only(start: 4),
+                        padding: const EdgeInsetsDirectional.only(start: 6),
                         child: Container(
                           width: 10,
                           height: 10,
@@ -67,6 +70,14 @@ class QuestionView extends StatelessWidget {
                             color: i < attemptNo
                                 ? AppColors.gentleRetry
                                 : AppColors.divider,
+                            boxShadow: i < attemptNo
+                                ? [
+                                    BoxShadow(
+                                      color: AppColors.gentleRetry.withValues(alpha: 0.5),
+                                      blurRadius: 4,
+                                    ),
+                                  ]
+                                : null,
                           ),
                         ),
                       ),
@@ -78,16 +89,28 @@ class QuestionView extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.sm),
 
-        // Progress bar
+        // Progress bar inside Neumorphic sunken groove
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: AppSpacing.lg),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(4),
-            child: LinearProgressIndicator(
-              value: (question.index + 1) / totalQuestions,
-              backgroundColor: AppColors.divider,
-              color: AppColors.primary,
-              minHeight: 6,
+          child: Container(
+            height: 10,
+            decoration: AppNeumorphism.debossedDecoration(
+              color: AppColors.surfaceVariant,
+              radius: 6,
+            ),
+            padding: const EdgeInsets.all(2),
+            child: FractionallySizedBox(
+              alignment: AlignmentDirectional.centerStart,
+              widthFactor: (question.index + 1) / totalQuestions,
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  gradient: const LinearGradient(
+                    colors: [AppColors.primaryLight, AppColors.primary],
+                  ),
+                  boxShadow: AppNeumorphism.primaryGlowShadows(distance: 1, blur: 4),
+                ),
+              ),
             ),
           ),
         ),
@@ -103,21 +126,37 @@ class QuestionView extends StatelessWidget {
                 Semantics(
                   button: true,
                   label: 'استمع إلى نص السؤال صوتياً',
-                  child: IconButton.filledTonal(
-                    onPressed: onSpeakTts,
-                    icon: const Icon(Icons.volume_up_rounded),
-                    tooltip: 'استمع للسؤال',
+                  child: NeumorphicContainer(
+                    shape: BoxShape.circle,
+                    width: 44,
+                    height: 44,
+                    distance: 3,
+                    blur: 6,
+                    color: AppColors.surface,
+                    child: IconButton(
+                      onPressed: onSpeakTts,
+                      icon: const Icon(Icons.volume_up_rounded, color: AppColors.primary),
+                      tooltip: 'استمع للسؤال',
+                    ),
                   ),
                 ),
               if (onHelp != null) ...[
-                const SizedBox(width: AppSpacing.sm),
+                const SizedBox(width: AppSpacing.md),
                 Semantics(
                   button: true,
                   label: 'طلب مساعدة وتلميح',
-                  child: IconButton.filledTonal(
-                    onPressed: onHelp,
-                    icon: const Icon(Icons.lightbulb_outline_rounded),
-                    tooltip: 'مساعدة',
+                  child: NeumorphicContainer(
+                    shape: BoxShape.circle,
+                    width: 44,
+                    height: 44,
+                    distance: 3,
+                    blur: 6,
+                    color: AppColors.surface,
+                    child: IconButton(
+                      onPressed: onHelp,
+                      icon: const Icon(Icons.lightbulb_outline_rounded, color: AppColors.secondary),
+                      tooltip: 'مساعدة',
+                    ),
                   ),
                 ),
               ],
@@ -141,7 +180,7 @@ class QuestionView extends StatelessWidget {
             question.question,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
+                  fontWeight: FontWeight.w800,
                   height: 1.5,
                 ),
             textAlign: TextAlign.center,
@@ -187,7 +226,7 @@ class _OptionCard extends StatelessWidget {
   }
 
   Color _borderColor() {
-    if (!isSelected) return AppColors.border;
+    if (!isSelected) return Colors.white.withValues(alpha: 0.6);
     if (isCorrect == null) return AppColors.primary;
     if (isCorrect!) return AppColors.success;
     return AppColors.gentleRetry;
@@ -210,30 +249,18 @@ class _OptionCard extends StatelessWidget {
         selected: isSelected,
         label: 'الخيار: $label',
         hint: semanticHint,
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            color: _cardColor(),
-            border:
-                Border.all(color: _borderColor(), width: isSelected ? 2 : 1),
-            borderRadius: BorderRadius.circular(16),
-            boxShadow: isSelected
-                ? [
-                    BoxShadow(
-                      color: AppColors.primary.withValues(alpha: 0.12),
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ]
-                : [],
-          ),
+        child: NeumorphicContainer(
+          radius: 20,
+          style: isSelected ? NeumorphicStyle.debossed : NeumorphicStyle.embossed,
+          color: _cardColor(),
+          border: Border.all(color: _borderColor(), width: isSelected ? 2 : 1),
           child: Material(
             color: Colors.transparent,
             child: InkWell(
               onTap: isDisabled ? null : onTap,
-              borderRadius: BorderRadius.circular(16),
+              borderRadius: BorderRadius.circular(20),
               child: ConstrainedBox(
-                constraints: const BoxConstraints(minHeight: 64),
+                constraints: const BoxConstraints(minHeight: 68),
                 child: Padding(
                   padding: const EdgeInsets.all(AppSpacing.lg),
                   child: Row(
@@ -245,8 +272,9 @@ class _OptionCard extends StatelessWidget {
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: AppColors.textPrimary,
                                     fontWeight: isSelected
-                                        ? FontWeight.bold
-                                        : FontWeight.normal,
+                                        ? FontWeight.w800
+                                        : FontWeight.w600,
+                                    fontSize: 17,
                                   ),
                           textAlign: TextAlign.center,
                         ),
@@ -257,7 +285,7 @@ class _OptionCard extends StatelessWidget {
                               start: AppSpacing.sm),
                           child: Text(
                             isCorrect! ? '✅' : '💙',
-                            style: const TextStyle(fontSize: 20),
+                            style: const TextStyle(fontSize: 22),
                           ),
                         ),
                     ],

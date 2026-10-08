@@ -3,8 +3,11 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
+import '../../../../core/widgets/neumorphic_card.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../../core/widgets/parent_gate_dialog.dart';
 import '../../../auth/presentation/cubit/auth_cubit.dart';
 import '../../../auth/presentation/cubit/auth_state.dart';
@@ -34,9 +37,10 @@ class _SettingsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('الإعدادات'),
+        title: const Text('الإعدادات', style: TextStyle(fontWeight: FontWeight.w800)),
         backgroundColor: AppColors.surface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         foregroundColor: AppColors.textPrimary,
       ),
       body: BlocBuilder<SettingsCubit, SettingsState>(
@@ -48,7 +52,7 @@ class _SettingsView extends StatelessWidget {
             ),
             children: [
               // ── Experience ──────────────────────────────────────────────────
-              _SectionHeader(title: 'تجربة التعلم'),
+              const _SectionHeader(title: 'تجربة التعلم'),
               _SettingsCard(children: [
                 _SwitchTile(
                   icon: Icons.volume_up_rounded,
@@ -78,12 +82,12 @@ class _SettingsView extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
 
               // ── Font scale ──────────────────────────────────────────────────
-              _SectionHeader(title: 'حجم النص'),
+              const _SectionHeader(title: 'حجم النص'),
               _FontScaleCard(currentScale: settings.fontScale),
               const SizedBox(height: AppSpacing.lg),
 
               // ── Account ─────────────────────────────────────────────────────
-              _SectionHeader(title: 'الحساب'),
+              const _SectionHeader(title: 'الحساب'),
               _SettingsCard(children: [
                 _AccountNameTile(),
                 const Divider(height: 1, indent: 56),
@@ -94,7 +98,7 @@ class _SettingsView extends StatelessWidget {
               const SizedBox(height: AppSpacing.lg),
 
               // ── About ────────────────────────────────────────────────────────
-              _SectionHeader(title: 'عن التطبيق'),
+              const _SectionHeader(title: 'عن التطبيق'),
               _SettingsCard(children: [
                 _AboutTile(
                   icon: Icons.description_outlined,
@@ -115,11 +119,11 @@ class _SettingsView extends StatelessWidget {
                     Icons.info_outline_rounded,
                     color: AppColors.primary,
                   ),
-                  title: const Text('الإصدار'),
+                  title: const Text('الإصدار', style: TextStyle(fontWeight: FontWeight.w600)),
                   trailing: Text(
                     // [PLACEHOLDER: read from package_info_plus]
                     '1.0.0',
-                    style: AppTextStyles.caption,
+                    style: AppTextStyles.caption.copyWith(fontWeight: FontWeight.bold),
                   ),
                 ),
               ]),
@@ -161,33 +165,27 @@ class _FontScaleCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return NeumorphicCard(
+      radius: 20,
       padding: const EdgeInsets.all(AppSpacing.md),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Live preview
-          Padding(
-            padding: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
+          // Live preview inside sunken container
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: AppNeumorphism.debossedDecoration(
+              color: AppColors.surfaceVariant,
+              radius: 12,
+            ),
             child: Text(
               'معاينة: مرحباً بك في نوفا',
               style:
-                  AppTextStyles.bodyLarge.copyWith(fontSize: 16 * currentScale),
+                  AppTextStyles.bodyLarge.copyWith(fontSize: 16 * currentScale, fontWeight: FontWeight.w600),
             ),
           ),
-          const Divider(),
-          const SizedBox(height: AppSpacing.sm),
+          const SizedBox(height: AppSpacing.md),
           Row(
             children: _levels.map((lvl) {
               final isSelected = lvl.scale == currentScale;
@@ -199,12 +197,18 @@ class _FontScaleCard extends StatelessWidget {
                     duration: const Duration(milliseconds: 200),
                     margin: const EdgeInsets.symmetric(horizontal: 4),
                     padding: const EdgeInsets.symmetric(vertical: 10),
-                    decoration: BoxDecoration(
-                      color: isSelected
-                          ? AppColors.primary
-                          : AppColors.surfaceVariant,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                    decoration: isSelected
+                        ? BoxDecoration(
+                            color: AppColors.primary,
+                            borderRadius: BorderRadius.circular(12),
+                            boxShadow: AppNeumorphism.primaryGlowShadows(distance: 2, blur: 6),
+                          )
+                        : AppNeumorphism.embossedDecoration(
+                            color: AppColors.surface,
+                            radius: 12,
+                            distance: 2,
+                            blur: 4,
+                          ),
                     child: Column(
                       children: [
                         Text(
@@ -222,6 +226,7 @@ class _FontScaleCard extends StatelessWidget {
                           lvl.label,
                           style: TextStyle(
                             fontSize: 11,
+                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                             color: isSelected
                                 ? AppColors.textOnPrimary
                                 : AppColors.textSecondary,
@@ -253,7 +258,7 @@ class _AccountNameTile extends StatelessWidget {
     return ListTile(
       leading:
           const Icon(Icons.person_outline_rounded, color: AppColors.primary),
-      title: const Text('الاسم'),
+      title: const Text('الاسم', style: TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(name, style: AppTextStyles.caption),
       trailing: const Icon(Icons.edit_outlined, size: 18),
       onTap: () => _showEditName(context, name),
@@ -313,7 +318,7 @@ class _LogoutTile extends StatelessWidget {
     return ListTile(
       leading: const Icon(Icons.logout_rounded, color: AppColors.gentleRetry),
       title: const Text('تسجيل الخروج',
-          style: TextStyle(color: AppColors.gentleRetry)),
+          style: TextStyle(color: AppColors.gentleRetry, fontWeight: FontWeight.w600)),
       onTap: () async {
         final passed = await showParentGate(context);
         if (!passed || !context.mounted) return;
@@ -331,7 +336,7 @@ class _DeleteAccountTile extends StatelessWidget {
           color: AppColors.gentleRetry),
       title: const Text(
         'حذف الحساب',
-        style: TextStyle(color: AppColors.gentleRetry),
+        style: TextStyle(color: AppColors.gentleRetry, fontWeight: FontWeight.w600),
       ),
       onTap: () => _confirmDelete(context),
     );
@@ -408,7 +413,7 @@ class _AboutTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListTile(
       leading: Icon(icon, color: AppColors.primary),
-      title: Text(title),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       trailing: const Icon(Icons.open_in_new_rounded, size: 18),
       onTap: () {
         // [PLACEHOLDER: url_launcher — add url_launcher to pubspec and call launchUrl]
@@ -435,7 +440,10 @@ class _SectionHeader extends StatelessWidget {
           const EdgeInsetsDirectional.only(start: 4, bottom: AppSpacing.sm),
       child: Text(
         title,
-        style: AppTextStyles.titleSmall.copyWith(color: AppColors.primary),
+        style: AppTextStyles.titleSmall.copyWith(
+          color: AppColors.primary,
+          fontWeight: FontWeight.w800,
+        ),
       ),
     );
   }
@@ -447,20 +455,13 @@ class _SettingsCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.primary.withValues(alpha: 0.06),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+    return NeumorphicCard(
+      radius: 20,
+      padding: EdgeInsets.zero,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: Column(children: children),
       ),
-      clipBehavior: Clip.antiAlias,
-      child: Column(children: children),
     );
   }
 }
@@ -484,7 +485,7 @@ class _SwitchTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return SwitchListTile(
       secondary: Icon(icon, color: AppColors.primary),
-      title: Text(title),
+      title: Text(title, style: const TextStyle(fontWeight: FontWeight.w600)),
       subtitle: Text(subtitle, style: AppTextStyles.caption),
       value: value,
       onChanged: onChanged,

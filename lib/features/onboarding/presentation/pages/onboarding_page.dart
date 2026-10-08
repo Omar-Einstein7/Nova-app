@@ -7,9 +7,12 @@ import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/router/route_names.dart';
 import '../../../../core/storage/prefs.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../cubit/onboarding_cubit.dart';
 
-/// Onboarding: 3 slides with Skip, Next/Start buttons.
+/// Onboarding: 3 slides with Skip, Next/Start buttons in Neumorphic styling.
 /// Marks [Prefs.onboardingSeen] before navigating to login.
 class OnboardingPage extends StatelessWidget {
   const OnboardingPage({super.key});
@@ -106,13 +109,21 @@ class _OnboardingViewState extends State<_OnboardingView> {
                 Align(
                   alignment: AlignmentDirectional.centerEnd,
                   child: Padding(
-                    padding: const EdgeInsets.only(top: 8, right: 16, left: 16),
+                    padding: const EdgeInsets.only(top: 12, right: 20, left: 20),
                     child: AnimatedOpacity(
                       opacity: isLast ? 0.0 : 1.0,
                       duration: const Duration(milliseconds: 200),
                       child: TextButton(
                         key: const Key('onboarding_skip_button'),
                         onPressed: isLast ? null : () => _skip(context),
+                        style: TextButton.styleFrom(
+                          foregroundColor: AppColors.textSecondary,
+                          textStyle: const TextStyle(
+                            fontFamily: 'Cairo',
+                            fontWeight: FontWeight.w600,
+                            fontSize: 15,
+                          ),
+                        ),
                         child: Text(l10n.onboardingSkip),
                       ),
                     ),
@@ -135,31 +146,24 @@ class _OnboardingViewState extends State<_OnboardingView> {
                   count: slides.length,
                   current: currentPage,
                 ),
-                const SizedBox(height: 24),
+                const SizedBox(height: 28),
 
                 // ── Next / Start button ───────────────────────────────────
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 32),
+                  padding: const EdgeInsets.symmetric(horizontal: 28),
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
-                    child: SizedBox(
-                      key: ValueKey(isLast),
-                      width: double.infinity,
-                      height: 56,
-                      child: ElevatedButton(
-                        key: Key(isLast
-                            ? 'onboarding_start_button'
-                            : 'onboarding_next_button'),
-                        onPressed: () =>
-                            _next(context, currentPage, slides.length),
-                        child: Text(
-                          isLast ? l10n.onboardingStart : l10n.onboardingNext,
-                        ),
-                      ),
+                    child: AppButton(
+                      key: Key(isLast
+                          ? 'onboarding_start_button'
+                          : 'onboarding_next_button'),
+                      label: isLast ? l10n.onboardingStart : l10n.onboardingNext,
+                      onPressed: () =>
+                          _next(context, currentPage, slides.length),
                     ),
                   ),
                 ),
-                const SizedBox(height: 40),
+                const SizedBox(height: 36),
               ],
             ),
           ),
@@ -201,26 +205,37 @@ class _SlideContent extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          // [PLACEHOLDER: replace container with Image.asset illustration]
-          Container(
-            width: 220,
-            height: 220,
-            decoration: BoxDecoration(
-              color: slide.illustrationColor,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              slide.illustrationIcon,
-              size: 100,
-              color: slide.iconColor,
+          // Neumorphic illustration disc
+          NeumorphicContainer(
+            shape: BoxShape.circle,
+            width: 200,
+            height: 200,
+            color: AppColors.surface,
+            distance: 8,
+            blur: 16,
+            child: Center(
+              child: Container(
+                width: 140,
+                height: 140,
+                decoration: BoxDecoration(
+                  color: slide.illustrationColor,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  slide.illustrationIcon,
+                  size: 72,
+                  color: slide.iconColor,
+                ),
+              ),
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 44),
           Text(
             slide.title,
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                   color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w700,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -0.5,
                 ),
             textAlign: TextAlign.center,
           ),
@@ -230,6 +245,7 @@ class _SlideContent extends StatelessWidget {
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
                   color: AppColors.textSecondary,
                   height: 1.7,
+                  fontSize: 16,
                 ),
             textAlign: TextAlign.center,
           ),
@@ -253,18 +269,31 @@ class _DotsIndicator extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: List.generate(
         count,
-        (i) => AnimatedContainer(
-          duration: const Duration(milliseconds: 300),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          width: i == current ? 24 : 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: i == current
-                ? AppColors.primary
-                : AppColors.primary.withValues(alpha: 0.25),
-            borderRadius: BorderRadius.circular(4),
-          ),
-        ),
+        (i) {
+          final isSelected = i == current;
+          return AnimatedContainer(
+            duration: const Duration(milliseconds: 300),
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            width: isSelected ? 28 : 10,
+            height: 10,
+            decoration: isSelected
+                ? BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(5),
+                    boxShadow: AppNeumorphism.primaryGlowShadows(
+                      distance: 2,
+                      blur: 6,
+                    ),
+                  )
+                : AppNeumorphism.debossedDecoration(
+                    color: AppColors.surfaceVariant,
+                    radius: 5,
+                    border: Border.all(
+                      color: AppColors.shadowDark.withValues(alpha: 0.2),
+                    ),
+                  ),
+          );
+        },
       ),
     );
   }

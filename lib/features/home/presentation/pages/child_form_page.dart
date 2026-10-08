@@ -6,8 +6,10 @@ import '../../../../core/di/injection.dart';
 import '../../../../core/error/failures.dart';
 import '../../../../core/l10n/app_localizations.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../../children/domain/entities/child.dart';
 import '../../../children/presentation/cubit/child_form_cubit.dart';
 import '../../../children/presentation/cubit/child_form_state.dart';
@@ -65,15 +67,33 @@ class _ChildFormViewState extends State<_ChildFormView> {
         return Scaffold(
           backgroundColor: AppColors.background,
           appBar: AppBar(
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.surface,
             elevation: 0,
+            scrolledUnderElevation: 0,
             title: Text(
               widget.isEdit ? l.editChildTitle : l.addChildTitle,
-              style: AppTextStyles.titleLarge.copyWith(color: Colors.white),
+              style: AppTextStyles.titleLarge.copyWith(
+                color: AppColors.textPrimary,
+                fontWeight: FontWeight.w800,
+              ),
             ),
-            leading: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white),
-              onPressed: () => context.pop(),
+            leading: Padding(
+              padding: const EdgeInsetsDirectional.only(start: 12),
+              child: Center(
+                child: NeumorphicContainer(
+                  shape: BoxShape.circle,
+                  width: 40,
+                  height: 40,
+                  distance: 3,
+                  blur: 6,
+                  color: AppColors.surface,
+                  child: IconButton(
+                    icon: const Icon(Icons.arrow_back_ios_new,
+                        color: AppColors.textPrimary, size: 18),
+                    onPressed: () => context.pop(),
+                  ),
+                ),
+              ),
             ),
           ),
           body: Column(
@@ -154,21 +174,27 @@ class _StepIndicator extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: AppColors.primary,
-      padding: const EdgeInsets.only(bottom: 16),
+      color: AppColors.surface,
+      padding: const EdgeInsets.only(bottom: 16, top: 8),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: List.generate(3, (i) {
           final isActive = i <= currentStep;
           return AnimatedContainer(
             duration: const Duration(milliseconds: 250),
-            margin: const EdgeInsets.symmetric(horizontal: 4),
-            width: isActive ? 32 : 8,
+            margin: const EdgeInsets.symmetric(horizontal: 5),
+            width: isActive ? 36 : 12,
             height: 8,
-            decoration: BoxDecoration(
-              color: isActive ? Colors.white : Colors.white38,
-              borderRadius: BorderRadius.circular(4),
-            ),
+            decoration: isActive
+                ? BoxDecoration(
+                    color: AppColors.primary,
+                    borderRadius: BorderRadius.circular(4),
+                    boxShadow: AppNeumorphism.primaryGlowShadows(distance: 1, blur: 4),
+                  )
+                : AppNeumorphism.debossedDecoration(
+                    color: AppColors.surfaceVariant,
+                    radius: 4,
+                  ),
           );
         }),
       ),
@@ -191,24 +217,18 @@ class _StepNavBar extends StatelessWidget {
 
     return SafeArea(
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 16),
         child: Row(
           children: [
             if (state.currentStep > 0)
               Expanded(
-                child: OutlinedButton(
+                child: AppButton(
+                  variant: AppButtonVariant.secondary,
+                  label: l.back,
                   onPressed: isLoading ? null : cubit.prevStep,
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(color: AppColors.primary),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    minimumSize: const Size(double.infinity, 52),
-                  ),
-                  child: Text(l.back,
-                      style: const TextStyle(color: AppColors.primary)),
                 ),
               ),
-            if (state.currentStep > 0) const SizedBox(width: 12),
+            if (state.currentStep > 0) const SizedBox(width: 14),
             Expanded(
               flex: 2,
               child: AppButton(

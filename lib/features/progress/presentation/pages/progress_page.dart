@@ -4,11 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../core/di/injection.dart';
 import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_neumorphism.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_text_styles.dart';
 import '../../../../core/utils/nova_motion.dart';
+import '../../../../core/utils/formatters.dart';
 import '../../../../core/widgets/error_view.dart';
 import '../../../../core/widgets/loading_view.dart';
+import '../../../../core/widgets/neumorphic_card.dart';
+import '../../../../core/widgets/neumorphic_container.dart';
 import '../../domain/entities/progress_entities.dart';
 import '../../domain/usecases/progress_use_cases.dart';
 import '../cubit/progress_cubit.dart';
@@ -83,15 +87,27 @@ class _ProgressViewState extends State<_ProgressView> {
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
-        title: const Text('التقدم'),
+        title: const Text('التقدم', style: TextStyle(fontWeight: FontWeight.w800)),
         backgroundColor: AppColors.surface,
         elevation: 0,
+        scrolledUnderElevation: 0,
         foregroundColor: AppColors.textPrimary,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.info_outline_rounded),
-            tooltip: 'معلومات',
-            onPressed: () => _showDisclaimer(context),
+          Padding(
+            padding: const EdgeInsetsDirectional.only(end: 16),
+            child: NeumorphicContainer(
+              shape: BoxShape.circle,
+              width: 40,
+              height: 40,
+              distance: 3,
+              blur: 6,
+              color: AppColors.surface,
+              child: IconButton(
+                icon: const Icon(Icons.info_outline_rounded, size: 20),
+                tooltip: 'معلومات',
+                onPressed: () => _showDisclaimer(context),
+              ),
+            ),
           ),
         ],
       ),
@@ -147,7 +163,7 @@ class _ProgressViewState extends State<_ProgressView> {
           // ── Stat cards ─────────────────────────────────────────────────────
           Semantics(
             label:
-                'إحصائيات: ${overview.sessionsCount} جلسة، نسبة نجاح ${(overview.avgSuccessRate * 100).toInt()}٪، ${overview.totalMinutes} دقيقة، ${overview.streakDays} يوم متتالي',
+                'إحصائيات: ${overview.sessionsCount} جلسة، نسبة نجاح ${NovaFormatters.formatPercentage(overview.avgSuccessRate, useArabicPercent: true)}، ${overview.totalMinutes} دقيقة، ${overview.streakDays} يوم متتالي',
             child: _StatCardsRow(overview: overview),
           ),
           const SizedBox(height: AppSpacing.xl),
@@ -199,8 +215,8 @@ class _ProgressViewState extends State<_ProgressView> {
       builder: (_) => AlertDialog(
         title: const Text('ملاحظة مهمة'),
         content: const Text(
-          'NOVA منصة تعليمية داعمة وليست أداة تشخيص.',
-          textAlign: TextAlign.center,
+          'NOVA هي منصة تعليمية داعمة مصممة لمساعدة طفلك على التعلم والتطور. '
+          'التقارير والإحصائيات المعروضة هي للمتابعة التعليمية فقط وليست أداة تشخيص طبي.',
         ),
         actions: [
           TextButton(
@@ -233,25 +249,31 @@ class _RangeSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: AppNeumorphism.debossedDecoration(
         color: AppColors.surfaceVariant,
-        borderRadius: BorderRadius.circular(12),
+        radius: 16,
       ),
-      padding: const EdgeInsets.all(4),
+      padding: const EdgeInsets.all(5),
       child: Row(
         children: List.generate(ranges.length, (i) {
           final isSelected = ranges[i] == selected;
           return Expanded(
             child: AnimatedContainer(
               duration: const Duration(milliseconds: 200),
-              decoration: BoxDecoration(
-                color: isSelected ? AppColors.primary : Colors.transparent,
-                borderRadius: BorderRadius.circular(8),
-              ),
+              decoration: isSelected
+                  ? BoxDecoration(
+                      color: AppColors.primary,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: AppNeumorphism.primaryGlowShadows(distance: 2, blur: 6),
+                    )
+                  : BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
               child: Material(
                 color: Colors.transparent,
                 child: InkWell(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(12),
                   onTap: () => onChanged(ranges[i]),
                   child: Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
@@ -262,6 +284,7 @@ class _RangeSelector extends StatelessWidget {
                         color: isSelected
                             ? AppColors.textOnPrimary
                             : AppColors.textSecondary,
+                        fontWeight: isSelected ? FontWeight.w800 : FontWeight.w600,
                       ),
                     ),
                   ),
@@ -285,16 +308,18 @@ class _StatCardsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final rate = overview.avgSuccessRate;
-    final rateStr = '${(rate * 100).toInt()}٪';
+    final rateStr = NovaFormatters.formatPercentage(
+      overview.avgSuccessRate,
+      useArabicPercent: true,
+    );
 
     return GridView.count(
       crossAxisCount: 2,
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisSpacing: AppSpacing.sm,
-      mainAxisSpacing: AppSpacing.sm,
-      childAspectRatio: 1.6,
+      crossAxisSpacing: AppSpacing.md,
+      mainAxisSpacing: AppSpacing.md,
+      childAspectRatio: 1.5,
       children: [
         _StatCard(
           icon: Icons.play_circle_outline_rounded,
@@ -340,18 +365,11 @@ class _StatCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
-        boxShadow: [
-          BoxShadow(
-            color: color.withValues(alpha: 0.08),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
+    return NeumorphicContainer(
+      radius: 18,
+      distance: 3,
+      blur: 7,
+      color: AppColors.surface,
       padding: const EdgeInsets.symmetric(
         horizontal: AppSpacing.md,
         vertical: AppSpacing.sm,
@@ -360,13 +378,16 @@ class _StatCard extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, color: color, size: 20),
+          Icon(icon, color: color, size: 22),
           const SizedBox(height: 4),
           Text(
             value,
-            style: AppTextStyles.headlineMedium.copyWith(color: color),
+            style: AppTextStyles.headlineMedium.copyWith(
+              color: color,
+              fontWeight: FontWeight.w800,
+            ),
           ),
-          Text(label, style: AppTextStyles.bodySmall),
+          Text(label, style: AppTextStyles.bodySmall.copyWith(fontWeight: FontWeight.w500)),
         ],
       ),
     );
@@ -390,12 +411,11 @@ class _SkillDropdown extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border),
-      ),
+    return NeumorphicContainer(
+      radius: 16,
+      distance: 3,
+      blur: 6,
+      color: AppColors.surface,
       padding: const EdgeInsetsDirectional.symmetric(horizontal: AppSpacing.md),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<String>(
@@ -405,7 +425,7 @@ class _SkillDropdown extends StatelessWidget {
           items: skills
               .map((s) => DropdownMenuItem(
                     value: s.skillId,
-                    child: Text(s.nameAr),
+                    child: Text(s.nameAr, style: const TextStyle(fontWeight: FontWeight.w600)),
                   ))
               .toList(),
           onChanged: (v) {
@@ -448,24 +468,16 @@ class _ChartCard extends StatelessWidget {
     }
     return Semantics(
       label: 'رسم بياني لنسبة النجاح',
-      child: Container(
-        height: 200,
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
-          boxShadow: [
-            BoxShadow(
-              color: AppColors.primary.withValues(alpha: 0.06),
-              blurRadius: 8,
-              offset: const Offset(0, 2),
-            ),
-          ],
-        ),
-        padding: const EdgeInsets.fromLTRB(8, 16, 16, 8),
-        child: LineChart(
-          _buildLineChartData(),
-          duration:
-              reduceMotion ? Duration.zero : const Duration(milliseconds: 400),
+      child: NeumorphicCard(
+        radius: 20,
+        padding: const EdgeInsets.fromLTRB(10, 18, 18, 10),
+        child: SizedBox(
+          height: 200,
+          child: LineChart(
+            _buildLineChartData(),
+            duration:
+                reduceMotion ? Duration.zero : const Duration(milliseconds: 400),
+          ),
         ),
       ),
     );
@@ -473,7 +485,10 @@ class _ChartCard extends StatelessWidget {
 
   LineChartData _buildLineChartData() {
     final spots = points.asMap().entries.map((e) {
-      return FlSpot(e.key.toDouble(), e.value.avgSuccessRate * 100);
+      return FlSpot(
+        e.key.toDouble(),
+        NovaFormatters.toPercentage(e.value.avgSuccessRate),
+      );
     }).toList();
 
     return LineChartData(
@@ -482,7 +497,7 @@ class _ChartCard extends StatelessWidget {
         drawVerticalLine: false,
         horizontalInterval: 25,
         getDrawingHorizontalLine: (v) =>
-            FlLine(color: AppColors.divider, strokeWidth: 1),
+            FlLine(color: AppColors.divider.withValues(alpha: 0.5), strokeWidth: 1),
       ),
       titlesData: FlTitlesData(
         bottomTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
@@ -508,19 +523,19 @@ class _ChartCard extends StatelessWidget {
           spots: spots,
           isCurved: true,
           color: AppColors.primary,
-          barWidth: 2.5,
+          barWidth: 3.0,
           dotData: FlDotData(
             show: spots.length <= 10,
             getDotPainter: (spot, percent, bar, index) => FlDotCirclePainter(
-              radius: 4,
+              radius: 4.5,
               color: AppColors.primary,
               strokeColor: AppColors.surface,
-              strokeWidth: 2,
+              strokeWidth: 2.5,
             ),
           ),
           belowBarData: BarAreaData(
             show: true,
-            color: AppColors.primary.withValues(alpha: 0.08),
+            color: AppColors.primary.withValues(alpha: 0.12),
           ),
         ),
       ],
@@ -552,21 +567,23 @@ class _SkillProgressTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final pct = skill.avgSuccessRate.clamp(0.0, 1.0);
+    final fraction = NovaFormatters.toFraction(skill.avgSuccessRate);
+    final pctStr = NovaFormatters.formatPercentage(
+      skill.avgSuccessRate,
+      useArabicPercent: true,
+    );
     final levelLabel = _levelLabel(skill.level);
     final levelColor = _levelColor(skill.level);
 
     return Semantics(
-      label:
-          '${skill.nameAr}: مستوى $levelLabel، نسبة نجاح ${(pct * 100).toInt()}٪',
-      child: Container(
+      label: '${skill.nameAr}: مستوى $levelLabel، نسبة نجاح $pctStr',
+      child: NeumorphicContainer(
         margin: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
         padding: const EdgeInsets.all(AppSpacing.md),
-        decoration: BoxDecoration(
-          color: AppColors.surface,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-        ),
+        radius: 16,
+        distance: 3,
+        blur: 6,
+        color: AppColors.surface,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -575,21 +592,24 @@ class _SkillProgressTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     skill.nameAr,
-                    style: AppTextStyles.titleSmall,
+                    style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w700),
                   ),
                 ),
                 Container(
                   padding: const EdgeInsets.symmetric(
-                    horizontal: 8,
-                    vertical: 3,
+                    horizontal: 10,
+                    vertical: 4,
                   ),
                   decoration: BoxDecoration(
-                    color: levelColor.withValues(alpha: 0.12),
+                    color: levelColor.withValues(alpha: 0.14),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     levelLabel,
-                    style: AppTextStyles.caption.copyWith(color: levelColor),
+                    style: AppTextStyles.caption.copyWith(
+                      color: levelColor,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
               ],
@@ -598,22 +618,31 @@ class _SkillProgressTile extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: LinearProgressIndicator(
-                      value: pct,
-                      minHeight: 8,
-                      backgroundColor: AppColors.surfaceVariant,
-                      valueColor: AlwaysStoppedAnimation<Color>(levelColor),
+                  child: Container(
+                    height: 10,
+                    decoration: AppNeumorphism.debossedDecoration(
+                      color: AppColors.surfaceVariant,
+                      radius: 5,
+                    ),
+                    padding: const EdgeInsets.all(1.5),
+                    child: FractionallySizedBox(
+                      alignment: AlignmentDirectional.centerStart,
+                      widthFactor: fraction,
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: levelColor,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
                     ),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.sm),
                 Text(
-                  '${(pct * 100).toInt()}٪',
+                  pctStr,
                   style: AppTextStyles.caption.copyWith(
                     color: levelColor,
-                    fontWeight: FontWeight.w600,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
@@ -697,61 +726,45 @@ class _SessionTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final stars = session.stars.clamp(0, 3);
-    final successPct = (session.successRate * 100).toInt();
+    final successStr = NovaFormatters.formatPercentage(
+      session.successRate,
+      useArabicPercent: true,
+    );
 
-    return Container(
+    return NeumorphicCard(
+      radius: 16,
+      distance: 3,
+      blur: 6,
       margin: const EdgeInsetsDirectional.only(bottom: AppSpacing.sm),
       padding: const EdgeInsets.all(AppSpacing.md),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
-      ),
       child: Row(
         children: [
-          // Stars
-          Column(
-            children: List.generate(
-              3,
-              (i) => Icon(
-                Icons.star_rounded,
-                size: 14,
-                color: i < stars ? AppColors.starFilled : AppColors.starEmpty,
-              ),
-            ),
-          ),
-          const SizedBox(width: AppSpacing.md),
-          // Info
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   session.activityTitle,
-                  style: AppTextStyles.titleSmall,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
+                  style: AppTextStyles.titleSmall.copyWith(fontWeight: FontWeight.w700),
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '${_formatDate(session.startedAt)} · ${_formatDuration(session.durationMs)}',
-                  style: AppTextStyles.caption,
+                  '${_formatDate(session.startedAt)} · ${_formatDuration(session.durationMs)} · $successStr',
+                  style: AppTextStyles.bodySmall.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
           ),
-          // Success %
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-            decoration: BoxDecoration(
-              color: AppColors.success.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Text(
-              '$successPct٪',
-              style: AppTextStyles.caption.copyWith(
-                color: AppColors.success,
-                fontWeight: FontWeight.w700,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: List.generate(
+              3,
+              (i) => Icon(
+                i < stars ? Icons.star_rounded : Icons.star_outline_rounded,
+                size: 18,
+                color: i < stars ? AppColors.starFilled : AppColors.starEmpty,
               ),
             ),
           ),
@@ -777,29 +790,35 @@ class _EmptyProgressView extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const Icon(
-              Icons.bar_chart_rounded,
-              size: 72,
-              color: AppColors.textDisabled,
-            ),
-            const SizedBox(height: AppSpacing.lg),
-            const Text(
-              'لسه ما فيش جلسات',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
-                color: AppColors.textSecondary,
+            NeumorphicContainer(
+              shape: BoxShape.circle,
+              width: 88,
+              height: 88,
+              distance: 5,
+              blur: 10,
+              color: AppColors.surface,
+              child: const Center(
+                child: Icon(
+                  Icons.bar_chart_rounded,
+                  size: 48,
+                  color: AppColors.textDisabled,
+                ),
               ),
             ),
-            const SizedBox(height: AppSpacing.sm),
-            const Text(
-              'ابدأ نشاطاً مع طفلك وستظهر هنا إحصائيات التقدم.',
+            const SizedBox(height: AppSpacing.lg),
+            Text(
+              'لا توجد بيانات تقدم لهذه الفترة.',
               textAlign: TextAlign.center,
-              style: TextStyle(color: AppColors.textSecondary),
+              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             const SizedBox(height: AppSpacing.xl),
-            const _DisclaimerFooter(),
+            OutlinedButton(
+              onPressed: onRetry,
+              child: const Text('تحديث'),
+            ),
           ],
         ),
       ),
@@ -819,24 +838,25 @@ class _DisclaimerFooter extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(AppSpacing.md),
       decoration: BoxDecoration(
-        color: AppColors.surfaceVariant,
+        color: AppColors.surfaceVariant.withValues(alpha: 0.6),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: AppColors.border.withValues(alpha: 0.5)),
       ),
       child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Icon(
             Icons.info_outline_rounded,
-            size: 18,
+            size: 16,
             color: AppColors.textSecondary,
           ),
           const SizedBox(width: AppSpacing.sm),
-          const Expanded(
+          Expanded(
             child: Text(
-              'NOVA منصة تعليمية داعمة وليست أداة تشخيص.',
-              style: TextStyle(
-                fontSize: 12,
+              'NOVA منصة تعليمية داعمة وليست أداة تشخيص طبي.',
+              style: AppTextStyles.caption.copyWith(
                 color: AppColors.textSecondary,
+                height: 1.4,
               ),
             ),
           ),
@@ -847,7 +867,7 @@ class _DisclaimerFooter extends StatelessWidget {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Section header helper
+// Section header
 // ─────────────────────────────────────────────────────────────────────────────
 
 class _SectionHeader extends StatelessWidget {
@@ -856,6 +876,12 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(title, style: AppTextStyles.headlineMedium);
+    return Text(
+      title,
+      style: AppTextStyles.labelLarge.copyWith(
+        color: AppColors.textPrimary,
+        fontWeight: FontWeight.w800,
+      ),
+    );
   }
 }

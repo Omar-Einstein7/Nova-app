@@ -1,5 +1,6 @@
 import "package:flutter/material.dart";
 import "app_colors.dart";
+import "app_neumorphism.dart";
 
 /// NOVA ThemeData factory.
 /// fontScale: 0.9 (small) | 1.0 (normal) | 1.2 (large)
@@ -42,14 +43,19 @@ final class AppTheme {
       scaffoldBackgroundColor: AppColors.background,
       fontFamily: fontFamily,
 
-      // ── Shape (radius 20) ───────────────────────────────────────────────
+      // ── Neumorphic Cards (radius 20) ────────────────────────────────────
       cardTheme: CardThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(AppNeumorphism.defaultRadius),
+          side: BorderSide(
+            color: Colors.white.withValues(alpha: 0.8),
+            width: 1.0,
+          ),
         ),
         color: AppColors.surface,
-        elevation: 2,
-        shadowColor: AppColors.primary.withValues(alpha: 0.08),
+        elevation: 0,
+        margin: EdgeInsets.zero,
+        shadowColor: AppColors.shadowDark.withValues(alpha: 0.35),
       ),
 
       // ── AppBar ──────────────────────────────────────────────────────────
@@ -57,12 +63,12 @@ final class AppTheme {
         backgroundColor: AppColors.surface,
         foregroundColor: AppColors.textPrimary,
         elevation: 0,
-        scrolledUnderElevation: 1,
+        scrolledUnderElevation: 0,
         centerTitle: true,
         titleTextStyle: TextStyle(
           fontFamily: fontFamily,
           fontSize: 18 * fontScale,
-          fontWeight: FontWeight.w600,
+          fontWeight: FontWeight.w700,
           color: AppColors.textPrimary,
         ),
       ),
@@ -74,26 +80,28 @@ final class AppTheme {
           foregroundColor: AppColors.textOnPrimary,
           minimumSize: const Size.fromHeight(56),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppNeumorphism.defaultRadius),
           ),
           textStyle: TextStyle(
             fontFamily: fontFamily,
             fontSize: 16 * fontScale,
             fontWeight: FontWeight.w600,
           ),
-          elevation: 2,
+          elevation: 3,
+          shadowColor: AppColors.primary.withValues(alpha: 0.35),
         ),
       ),
 
       // ── OutlinedButton (secondary action) ───────────────────────────────
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
+          backgroundColor: AppColors.surface,
           foregroundColor: AppColors.primary,
           minimumSize: const Size.fromHeight(56),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(AppNeumorphism.defaultRadius),
           ),
-          side: const BorderSide(color: AppColors.primary, width: 1.5),
+          side: BorderSide(color: AppColors.primary.withValues(alpha: 0.6), width: 1.5),
           textStyle: TextStyle(
             fontFamily: fontFamily,
             fontSize: 16 * fontScale,
@@ -114,19 +122,33 @@ final class AppTheme {
         ),
       ),
 
-      // ── Input decoration ─────────────────────────────────────────────────
+      // ── Floating Action Button ──────────────────────────────────────────
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: AppColors.primary,
+        foregroundColor: Colors.white,
+        elevation: 4,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+      ),
+
+      // ── Input decoration (Neumorphic recessed look) ──────────────────────
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: AppColors.surfaceVariant.withValues(alpha: 0.6),
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(
+            color: AppColors.shadowDark.withValues(alpha: 0.2),
+          ),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(
+            color: AppColors.shadowDark.withValues(alpha: 0.2),
+          ),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
@@ -161,8 +183,9 @@ final class AppTheme {
       // ── Chip ─────────────────────────────────────────────────────────────
       chipTheme: ChipThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(14),
         ),
+        backgroundColor: AppColors.surface,
       ),
 
       // ── Text theme (used by Material widgets) ────────────────────────────
@@ -178,11 +201,11 @@ final class AppTheme {
         headlineLarge: TextStyle(
             fontFamily: fontFamily,
             fontSize: 22 * fontScale,
-            fontWeight: FontWeight.w600),
+            fontWeight: FontWeight.w700),
         headlineMedium: TextStyle(
             fontFamily: fontFamily,
             fontSize: 18 * fontScale,
-            fontWeight: FontWeight.w600),
+            fontWeight: FontWeight.w700),
         titleLarge: TextStyle(
             fontFamily: fontFamily,
             fontSize: 18 * fontScale,
@@ -190,7 +213,7 @@ final class AppTheme {
         titleMedium: TextStyle(
             fontFamily: fontFamily,
             fontSize: 16 * fontScale,
-            fontWeight: FontWeight.w500),
+            fontWeight: FontWeight.w600),
         bodyLarge: TextStyle(
             fontFamily: fontFamily,
             fontSize: 16 * fontScale,
@@ -223,17 +246,19 @@ final class AppTheme {
       ),
 
       // ── Dialog ────────────────────────────────────────────────────────────
-      dialogTheme: const DialogThemeData(
+      dialogTheme: DialogThemeData(
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(24)),
+          side: BorderSide(color: Colors.white.withValues(alpha: 0.8)),
         ),
         backgroundColor: AppColors.surface,
+        elevation: 6,
       ),
 
       // ── Snack bar ─────────────────────────────────────────────────────────
       snackBarTheme: SnackBarThemeData(
         behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         backgroundColor: AppColors.textPrimary,
         contentTextStyle: TextStyle(
           fontFamily: fontFamily,
